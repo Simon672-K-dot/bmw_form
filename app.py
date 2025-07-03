@@ -116,4 +116,7 @@ if fussweg_selected:
 if augenschutz_selected:
     ausgewaehlte_bilder.append("Augenschutz")
 
-st.write("Ausgewählte Schilder:", ausgewaehlte_bilder)
+st.markdown("**Ausgewählte Schilder:", ausgewaehlte_bilder)
+
+for schild in ausgewaehlte_bilder:
+    st.markdown(f"- ✅ {schild}")
