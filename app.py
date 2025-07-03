@@ -86,16 +86,34 @@ with col_c:
     bild = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"])
 
 # --- Gebotsschilder ---
-st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- und Warnschilder</h3>', unsafe_allow_html=True)
-gebotsschilder = [
-    "M001 Allgemeines Gebotszeichen",
-    "M003 Gehörschutz benutzen",
-    "M004 Augenschutz benutzen",
-    "M008 Fußschutz benutzen",
-    "M009 Handschutz benutzen",
-    "M010 Schutzkleidung benutzen",
-    "M011 Hände waschen",
-    "M012 Handlauf benutzen",
-    "M013 Gesichtsschutz benutzen"
-]
-ausgewaehlte_gebote = st.multiselect("Wählen Sie die zutreffenden Schilder aus:", gebotsschilder)
+st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- und Warnschilder (Bilderauswahl)</h3>', unsafe_allow_html=True)
+
+col_b1, col_b2, col_b3, col_b4 = st.columns(4)
+
+with col_b1:
+    st.image("images/fussschutz.jpg", width=100)
+    fussschutz_selected = st.checkbox("Fußschutz")
+
+with col_b2:
+    st.image("images/warnweste.jpg", width=100)
+    warnweste_selected = st.checkbox("Warnweste")
+
+with col_b3:
+    st.image("images/fussgaenger.jpg", width=100)
+    fussweg_selected = st.checkbox("Fußgängerweg")
+
+with col_b4:
+    st.image("images/augenschutz.jpg", width=100)
+    augenschutz_selected = st.checkbox("Augenschutz")
+
+ausgewaehlte_bilder = []
+if fussschutz_selected:
+    ausgewaehlte_bilder.append("Fußschutz")
+if warnweste_selected:
+    ausgewaehlte_bilder.append("Warnweste")
+if fussweg_selected:
+    ausgewaehlte_bilder.append("Fußgängerweg")
+if augenschutz_selected:
+    ausgewaehlte_bilder.append("Augenschutz")
+
+st.write("Ausgewählte Schilder:", ausgewaehlte_bilder)
