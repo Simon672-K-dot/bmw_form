@@ -99,7 +99,7 @@ with col_b2:
     warnweste_selected = st.checkbox("Warnweste")
 
 with col_b3:
-    st.image("images/fussgaenger.jpg", width=100)
+    st.image("images/fußgaenger.jpg", width=100)
     fussweg_selected = st.checkbox("Fußgängerweg")
 
 with col_b4:
