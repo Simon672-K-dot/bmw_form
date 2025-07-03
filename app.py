@@ -19,6 +19,7 @@ st.markdown('<h1 style="text-align:center;">📄 Arbeitsanweisung</h1>', unsafe_
 col_top1, col_top2 = st.columns(2)
 with col_top1:
     sortierstart = st.date_input("📆 Sortierstart")
+    st.write("DEBUG - Sortierstart:", sortierstart)
 with col_top2:
     freigabe = st.text_input("📌 Freigabe")
 
