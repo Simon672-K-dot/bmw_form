@@ -120,3 +120,56 @@ st.markdown("**Ausgewählte Schilder:**")
 
 for schild in ausgewaehlte_bilder:
     st.markdown(f"- ✅ {schild}")
+
+
+
+
+# --- NEUE SEITE: Serienbehälter ---
+
+st.markdown('<h1 style="text-align:center;">📄 Arbeitsanweisung</h1>', unsafe_allow_html=True)
+
+# --- Erste Zeile: Sortierstart & Freigabe ---
+col1a, col1b = st.columns(2)
+with col1a:
+    sortierstart2 = st.date_input("📅 Sortierstart (Seite 2)", key="sortierstart2")
+with col1b:
+    freigabe2 = st.text_input("📝 Freigabe", key="freigabe2")
+
+# --- Zweite Zeile: Auftrags-IDs & Kritischer BI ---
+col2a, col2b, col2c = st.columns(3)
+with col2a:
+    auftrag_bbw2 = st.text_input("🧾 Auftrags-ID BBW", key="auftrag_bbw2")
+with col2b:
+    auftrag_bmw2 = st.text_input("🧾 Auftrags-ID BMW", key="auftrag_bmw2")
+with col2c:
+    kritischster_bi2 = st.selectbox("📊 Kritischster BI", list(range(1, 11)), key="kritischster_bi2")
+
+st.markdown('<div style="background-color:#f0f0f0;padding:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
+pruefumfang2 = st.text_area("", height=80, key="pruefumfang2")
+
+# --- Serienbehälter-Bereich ---
+st.markdown('<h3 style="background-color:#e6e6e6;padding:10px;">📦 Serienbehälter</h3>', unsafe_allow_html=True)
+
+col_img, col_kommentar = st.columns([2, 1])
+with col_img:
+    serienbild2 = st.file_uploader("📸 Bild vom Serienbehälter hochladen", type=["jpg", "jpeg", "png"], key="serienbild2")
+    if serienbild2:
+        st.image(serienbild2, use_column_width=True)
+
+with col_kommentar:
+    kommentar_serien = st.text_area("💬 Kommentar zum Behälter", height=220, key="kommentar_serien")
+
+# --- Untere 3-Spalten-Zeile ---
+col_a, col_b, col_c = st.columns(3)
+with col_a:
+    abteilung_bmw2 = st.text_input("🏢 Abteilung BMW", key="abteilung_bmw2")
+with col_b:
+    ansprechpartner_kunde2 = st.text_input("👤 Ansprechpartner Kunde", key="ansprechpartner_kunde2")
+with col_c:
+    erstellt_von = st.text_input("🖊️ AAW erstellt von", key="erstellt_von")
+
+
+
+
+
+
