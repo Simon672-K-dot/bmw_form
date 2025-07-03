@@ -91,8 +91,8 @@ st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- 
 col_b1, col_b2, col_b3, col_b4 = st.columns(4)
 
 with col_b1:
-    st.image("images/fussschutz.jpg", width=100)
-    fussschutz_selected = st.checkbox("Fußschutz")
+    st.image("images/fusschutz.jpg", width=100)
+    fusschutz_selected = st.checkbox("Fußschutz")
 
 with col_b2:
     st.image("images/warnweste.jpg", width=100)
@@ -107,7 +107,7 @@ with col_b4:
     augenschutz_selected = st.checkbox("Augenschutz")
 
 ausgewaehlte_bilder = []
-if fussschutz_selected:
+if fusschutz_selected:
     ausgewaehlte_bilder.append("Fußschutz")
 if warnweste_selected:
     ausgewaehlte_bilder.append("Warnweste")
