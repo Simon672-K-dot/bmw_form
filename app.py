@@ -419,3 +419,18 @@ with col2:
 # Remarks
 st.markdown("### 📝 Bemerkungen")
 bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
+
+
+
+
+
+
+
+
+# --- FINAL SUBMIT BUTTON ---
+st.markdown("---")
+st.markdown("## 📤 Abgabe")
+
+if st.button("✅ Formular abgeben"):
+    st.success("Das Formular wurde erfolgreich abgegeben!")
+    st.info("Die PDF-Generierung folgt im nächsten Schritt anhand der BBW-Vorlage.")
