@@ -433,4 +433,4 @@ st.markdown("## 📤 Abgabe")
 
 if st.button("✅ Formular abgeben"):
     st.success("Das Formular wurde erfolgreich abgegeben!")
-    st.info("Die PDF-Generierung folgt im nächsten Schritt anhand der BBW-Vorlage.")
+   
