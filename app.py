@@ -221,7 +221,7 @@ zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
 
 import streamlit as st
 import pandas as pd
-import ace_tools as tools
+
 
 # Title
 st.markdown('<h2 style="text-align:center;">🧾 Nachweis Mitarbeiter Einweisung</h2>', unsafe_allow_html=True)
