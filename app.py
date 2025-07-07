@@ -235,3 +235,39 @@ df_matrix = pd.DataFrame({col: [""] * 15 for col in columns})
 edited_matrix = st.data_editor(df_matrix, num_rows="dynamic", use_container_width=True)
 
 
+
+
+#---Seite 5:Anhang zur Arbeitsanweisung---
+
+
+import pandas as pd
+import streamlit as st
+
+# 🔴 Main headline in red
+st.markdown("<h2 style='color:red;'>📎 Anhang zur Arbeitsanweisung</h2>", unsafe_allow_html=True)
+
+# 🔹 Subheadline for table section
+st.markdown("<h4 style='margin-top:-10px;'>📦 Materialdaten</h4>", unsafe_allow_html=True)
+
+# 📋 Define table columns
+columns = [
+    "Materialnummer",
+    "Materialbezeichnung",
+    "Lieferant",
+    "Fehlerort",
+    "Fehlerart",
+    "BI"
+]
+
+# Empty editable table
+df_anhang = pd.DataFrame(columns=columns)
+
+# 📝 Dynamic editor
+edited_df = st.data_editor(
+    df_anhang,
+    num_rows="dynamic",
+    use_container_width=True,
+    hide_index=True
+)
+
+
