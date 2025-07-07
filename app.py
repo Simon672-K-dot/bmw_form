@@ -129,53 +129,64 @@ for schild in ausgewaehlte_bilder:
 import streamlit as st
 from datetime import date
 
-st.set_page_config(page_title="Dynamische Prüfblöcke", layout="wide")
+st.set_page_config(page_title="Bauteil Dokumentation", layout="wide")
 
-# --- Dropdown to choose the type of inspection section ---
-st.markdown("## 🔍 Bauteil wählen")
-selected_inspection = st.selectbox(
-    "Welche Art von Bauteil möchten Sie dokumentieren?",
-    ["Serienbehälter", "I.O.-Bauteil", "N.I.O.-Bauteil", "I.O.-Markierung"]
-)
+st.markdown("## 📋 Auswahl der Bauteile zur Dokumentation")
 
-# --- How many blocks to create ---
-num_blocks = st.number_input(
-    f"Wieviele '{selected_inspection}' möchten Sie hinzufügen?",
-    min_value=1, max_value=10, step=1
-)
+# --- Anzahl je Bauteiltyp ---
+num_serien = st.number_input("📦 Serienbehälter", min_value=0, max_value=10, value=0)
+num_io = st.number_input("✅ I.O.-Bauteil", min_value=0, max_value=10, value=0)
+num_nio = st.number_input("❌ N.I.O.-Bauteil", min_value=0, max_value=10, value=0)
+num_markierung = st.number_input("🖊️ I.O.-Markierung", min_value=0, max_value=10, value=0)
+num_freigabezettel = st.number_input("📑 Freigabezettel", min_value=0, max_value=10, value=0)
 
 st.markdown("---")
 
-# --- Loop through each block ---
-for i in range(num_blocks):
-    st.markdown(f"<h3 style='background-color:#d9edf7;padding:10px;'>📦 {selected_inspection} {i+1}</h3>", unsafe_allow_html=True)
+# --- Wiederverwendbare Layout-Funktion ---
+def render_block(typ, index):
+    st.markdown(f"<h3 style='background-color:#f0f0f0;padding:10px;'>{typ} {index+1}</h3>", unsafe_allow_html=True)
 
-    # Prüfumfang (optional)
-    st.markdown('<div style="background-color:#f0f0f0;padding:8px;margin-bottom:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
-    pruefumfang = st.text_area(f"Prüfumfang {i+1}", key=f"pruefumfang_{i}")
+    st.markdown('<div style="background-color:#e8e8e8;padding:8px;margin-bottom:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
+    st.text_area(f"Prüfumfang {typ} {index+1}", key=f"pruefumfang_{typ}_{index}")
 
-    # Bild + Kommentar nebeneinander
     col_img, col_kommentar = st.columns([2, 1])
     with col_img:
-        image = st.file_uploader(f"📸 Bild für {selected_inspection} {i+1}", type=["jpg", "jpeg", "png"], key=f"img_{i}")
-        if image:
-            st.image(image, use_column_width=True)
+        bild = st.file_uploader(f"📸 Bild für {typ} {index+1}", type=["jpg", "jpeg", "png"], key=f"img_{typ}_{index}")
+        if bild:
+            st.image(bild, use_column_width=True)
 
     with col_kommentar:
-        kommentar = st.text_area("💬 Kommentar", height=200, key=f"kommentar_{i}")
+        st.text_area("💬 Kommentar", height=200, key=f"kommentar_{typ}_{index}")
 
-    # Untere Felder in drei Spalten
     col_a, col_b, col_c = st.columns(3)
     with col_a:
-        abteilung = st.text_input("🏢 Abteilung BMW", key=f"abteilung_{i}")
+        st.text_input("🏢 Abteilung BMW", key=f"abteilung_{typ}_{index}")
     with col_b:
-        ansprechpartner = st.text_input("👤 Ansprechpartner Kunde", key=f"ansprechpartner_{i}")
+        st.text_input("👤 Ansprechpartner Kunde", key=f"ansprechpartner_{typ}_{index}")
     with col_c:
-        erstellt_von = st.text_input("🖊️ AAW erstellt von", key=f"erstellt_von_{i}")
+        st.text_input("🖊️ AAW erstellt von", key=f"erstellt_von_{typ}_{index}")
 
     st.markdown("---")
 
+# --- Serienbehälter Blöcke ---
+for i in range(num_serien):
+    render_block("📦 Serienbehälter", i)
 
+# --- I.O.-Bauteil Blöcke ---
+for i in range(num_io):
+    render_block("✅ I.O.-Bauteil", i)
+
+# --- N.I.O.-Bauteil Blöcke ---
+for i in range(num_nio):
+    render_block("❌ N.I.O.-Bauteil", i)
+
+# --- I.O.-Markierung Blöcke ---
+for i in range(num_markierung):
+    render_block("🖊️ I.O.-Markierung", i)
+
+# --- Freigabezettel Blöcke ---
+for i in range(num_freigabezettel):
+    render_block("📑 Freigabezettel", i)
 
 
 
