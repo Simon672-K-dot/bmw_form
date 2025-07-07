@@ -243,26 +243,31 @@ edited_matrix = st.data_editor(df_matrix, num_rows="dynamic", use_container_widt
 import pandas as pd
 import streamlit as st
 
-# 🔴 Main headline in red
-st.markdown("<h2 style='color:red;'>📎 Anhang zur Arbeitsanweisung</h2>", unsafe_allow_html=True)
+# ✅ Headline with light green underline
+st.markdown("""
+<div style="border-bottom: 4px solid #b6e3b6; padding-bottom: 5px; margin-bottom: 15px;">
+    <h2 style="color:#262730; margin:0;">📎 Anhang zur Arbeitsanweisung</h2>
+</div>
+""", unsafe_allow_html=True)
 
-# 🔹 Subheadline for table section
+# 🔹 Subheadline
 st.markdown("<h4 style='margin-top:-10px;'>📦 Materialdaten</h4>", unsafe_allow_html=True)
 
-# 📋 Define table columns
+# 📋 Define initial table with deletion column
 columns = [
     "Materialnummer",
     "Materialbezeichnung",
     "Lieferant",
     "Fehlerort",
     "Fehlerart",
-    "BI"
+    "BI",
+    "🗑️ Löschen?"
 ]
 
-# Empty editable table
+# Leeres DataFrame (dynamisch erweiterbar)
 df_anhang = pd.DataFrame(columns=columns)
 
-# 📝 Dynamic editor
+# 📝 Editable table
 edited_df = st.data_editor(
     df_anhang,
     num_rows="dynamic",
@@ -270,4 +275,10 @@ edited_df = st.data_editor(
     hide_index=True
 )
 
+# 🧹 Filter rows where "🗑️ Löschen?" is not checked (False or NaN)
+if not edited_df.empty:
+    cleaned_df = edited_df[(edited_df["🗑️ Löschen?"] != True) | (edited_df["🗑️ Löschen?"].isna())]
 
+    # 📦 Show only entries to keep
+    st.markdown("### ✅ Übernommene Einträge (ohne gelöschte Zeilen):")
+    st.dataframe(cleaned_df.drop(columns=["🗑️ Löschen?"]), use_container_width=True)
