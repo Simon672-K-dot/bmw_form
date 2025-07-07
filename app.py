@@ -124,50 +124,56 @@ for schild in ausgewaehlte_bilder:
 
 
 
-# --- NEUE SEITE: Serienbehälter ---
+# --- NEUE SEITE ---
 
-st.markdown('<h1 style="text-align:center;">📄 Arbeitsanweisung</h1>', unsafe_allow_html=True)
+import streamlit as st
+from datetime import date
 
-# --- Erste Zeile: Sortierstart & Freigabe ---
-col1a, col1b = st.columns(2)
-with col1a:
-    sortierstart2 = st.date_input("📅 Sortierstart (Seite 2)", key="sortierstart2")
-with col1b:
-    freigabe2 = st.text_input("📝 Freigabe", key="freigabe2")
+st.set_page_config(page_title="Dynamische Prüfblöcke", layout="wide")
 
-# --- Zweite Zeile: Auftrags-IDs & Kritischer BI ---
-col2a, col2b, col2c = st.columns(3)
-with col2a:
-    auftrag_bbw2 = st.text_input("🧾 Auftrags-ID BBW", key="auftrag_bbw2")
-with col2b:
-    auftrag_bmw2 = st.text_input("🧾 Auftrags-ID BMW", key="auftrag_bmw2")
-with col2c:
-    kritischster_bi2 = st.selectbox("📊 Kritischster BI", list(range(1, 11)), key="kritischster_bi2")
+# --- Dropdown to choose the type of inspection section ---
+st.markdown("## 🔍 Bauteil wählen")
+selected_inspection = st.selectbox(
+    "Welche Art von Bauteil möchten Sie dokumentieren?",
+    ["Serienbehälter", "I.O.-Bauteil", "N.I.O.-Bauteil", "I.O.-Markierung"]
+)
 
-st.markdown('<div style="background-color:#f0f0f0;padding:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
-pruefumfang2 = st.text_area("", height=80, key="pruefumfang2")
+# --- How many blocks to create ---
+num_blocks = st.number_input(
+    f"Wieviele '{selected_inspection}' möchten Sie hinzufügen?",
+    min_value=1, max_value=10, step=1
+)
 
-# --- Serienbehälter-Bereich ---
-st.markdown('<h3 style="background-color:#e6e6e6;padding:10px;">📦 Serienbehälter</h3>', unsafe_allow_html=True)
+st.markdown("---")
 
-col_img, col_kommentar = st.columns([2, 1])
-with col_img:
-    serienbild2 = st.file_uploader("📸 Bild vom Serienbehälter hochladen", type=["jpg", "jpeg", "png"], key="serienbild2")
-    if serienbild2:
-        st.image(serienbild2, use_column_width=True)
+# --- Loop through each block ---
+for i in range(num_blocks):
+    st.markdown(f"<h3 style='background-color:#d9edf7;padding:10px;'>📦 {selected_inspection} {i+1}</h3>", unsafe_allow_html=True)
 
-with col_kommentar:
-    kommentar_serien = st.text_area("💬 Kommentar zum Behälter", height=220, key="kommentar_serien")
+    # Prüfumfang (optional)
+    st.markdown('<div style="background-color:#f0f0f0;padding:8px;margin-bottom:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
+    pruefumfang = st.text_area(f"Prüfumfang {i+1}", key=f"pruefumfang_{i}")
 
-# --- Untere 3-Spalten-Zeile ---
-col_a, col_b, col_c = st.columns(3)
-with col_a:
-    abteilung_bmw2 = st.text_input("🏢 Abteilung BMW", key="abteilung_bmw2")
-with col_b:
-    ansprechpartner_kunde2 = st.text_input("👤 Ansprechpartner Kunde", key="ansprechpartner_kunde2")
-with col_c:
-    erstellt_von = st.text_input("🖊️ AAW erstellt von", key="erstellt_von")
+    # Bild + Kommentar nebeneinander
+    col_img, col_kommentar = st.columns([2, 1])
+    with col_img:
+        image = st.file_uploader(f"📸 Bild für {selected_inspection} {i+1}", type=["jpg", "jpeg", "png"], key=f"img_{i}")
+        if image:
+            st.image(image, use_column_width=True)
 
+    with col_kommentar:
+        kommentar = st.text_area("💬 Kommentar", height=200, key=f"kommentar_{i}")
+
+    # Untere Felder in drei Spalten
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        abteilung = st.text_input("🏢 Abteilung BMW", key=f"abteilung_{i}")
+    with col_b:
+        ansprechpartner = st.text_input("👤 Ansprechpartner Kunde", key=f"ansprechpartner_{i}")
+    with col_c:
+        erstellt_von = st.text_input("🖊️ AAW erstellt von", key=f"erstellt_von_{i}")
+
+    st.markdown("---")
 
 
 
