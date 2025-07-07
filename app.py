@@ -218,16 +218,9 @@ zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
 
 #---Seite 4:Mitarbeiter Einweisung---
 
+st.markdown("## 🧾 Einweisungsübersicht")
 
-import streamlit as st
-from datetime import datetime
-import pandas as pd
-
-st.markdown("""
-    <h2 style='text-align: center;'>🗂️ Einweisungsübersicht</h2>
-""", unsafe_allow_html=True)
-
-# Spaltenüberschriften
+# Define 15 rows with 5 columns
 columns = [
     "Name unterwiesene Person",
     "Datum Unterweisung",
@@ -236,21 +229,12 @@ columns = [
     "Unterwiesen durch"
 ]
 
-data = []
+df_matrix = pd.DataFrame({col: [""] * 15 for col in columns})
 
-# Dynamisch 15 Zeilen erzeugen
-for i in range(1, 16):
-    with st.container():
-        col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 2])
+# Editable matrix-style table
+edited_matrix = st.experimental_data_editor(df_matrix, num_rows="dynamic", use_container_width=True)
 
-        name = col1.text_input("", key=f"name_{i}")
-        datum = col2.text_input("", key=f"datum_{i}", placeholder="TT.MM.JJJJ")
-        unterschrift_p = col3.text_input("", key=f"unterschrift_p_{i}")
-        unterschrift_u = col4.text_input("", key=f"unterschrift_u_{i}")
-        unterwiesen_durch = col5.text_input("", key=f"unterwiesen_durch_{i}")
+# Optional: show the current content for review
+st.markdown("### 📝 Eingetragene Einweisungen")
+st.dataframe(edited_matrix, use_container_width=True)
 
-        data.append([name, datum, unterschrift_p, unterschrift_u, unterwiesen_durch])
-
-# DataFrame anzeigen (optional, für Debug)
-df_nachweis = pd.DataFrame(data, columns=columns)
-st.dataframe(df_nachweis, use_container_width=True)
