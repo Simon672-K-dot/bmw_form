@@ -279,6 +279,4 @@ edited_df = st.data_editor(
 if not edited_df.empty:
     cleaned_df = edited_df[(edited_df["🗑️ Löschen?"] != True) | (edited_df["🗑️ Löschen?"].isna())]
 
-    # 📦 Show only entries to keep
-    st.markdown("### ✅ Übernommene Einträge (ohne gelöschte Zeilen):")
-    st.dataframe(cleaned_df.drop(columns=["🗑️ Löschen?"]), use_container_width=True)
+   
