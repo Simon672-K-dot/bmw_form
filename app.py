@@ -279,4 +279,81 @@ edited_df = st.data_editor(
 if not edited_df.empty:
     cleaned_df = edited_df[(edited_df["🗑️ Löschen?"] != True) | (edited_df["🗑️ Löschen?"].isna())]
 
-   
+
+
+
+#---Seite 6: Ergebnisserfassung 
+
+
+import streamlit as st
+import pandas as pd
+
+# Title Section
+st.markdown('<h2 style="text-align:center;">📊 Ergebniserfassung</h2>', unsafe_allow_html=True)
+
+# Header section: Auftrag, Lieferant, Teile-Nr., Teilebezeichnung
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    auftrag = st.text_input("Auftrag", value="19991", disabled=True)
+with col2:
+    lieferant = st.text_input("Lieferant", value="DAIMAY FRANCE")
+with col3:
+    teil_nr = st.text_input("Teile-Nr.")
+with col4:
+    teil_bez = st.text_input("Teilebezeichnung")
+
+# Sub-header: Datum, Art der Tätigkeit, Art der Prüfung
+col5, col6, col7 = st.columns(3)
+with col5:
+    datum = st.date_input("📅 Datum")
+with col6:
+    taetigkeit = st.text_input("Art der Tätigkeit")
+with col7:
+    pruefart = st.selectbox("Art der Prüfung", [
+        "Erstprüfung", "200% Prüfung", "Wdh. Prüfung IO", "Wdh. Prüfung NIO"
+    ])
+
+# Prüfort & IO-F-NR
+col8, col9 = st.columns(2)
+with col8:
+    pruefort = st.selectbox("Prüfort", ["Q-Fläche", "Bandbegleitend"])
+with col9:
+    io_fnr = st.selectbox("IO - F. NR.", ["VZ3 Neufahrn / AP", "VZ3 München / AP"])
+
+# Fehlerbilder Anzeige (A-F)
+st.markdown('<h4>Fehlerbilder:</h4>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style='display:flex; gap:10px;'>
+        <div style='background-color:#FF6B6B;padding:10px;'>A</div>
+        <div style='background-color:#FF6B6B;padding:10px;'>B</div>
+        <div style='background-color:#FF6B6B;padding:10px;'>C</div>
+        <div style='background-color:#FF6B6B;padding:10px;'>D</div>
+        <div style='background-color:#FF6B6B;padding:10px;'>E</div>
+        <div style='background-color:#FF6B6B;padding:10px;'>F</div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Ergebnisseingabe Tabelle
+st.markdown('<h4 style="margin-top:20px;">📥 Ergebnisseingabe</h4>', unsafe_allow_html=True)
+
+columns = [
+    "Lieferschein Nr.", "HU-Nummer", "ID OK", "Gesamt geprüft", "IO",
+    "NIO A", "NIO B", "NIO C", "NIO D", "NIO E", "NIO F",
+    "NIO Gesamt", "Nachgearbeitet", "Rest NIO", "Bemerkung"
+]
+df_ergebnis = pd.DataFrame(columns=columns)
+
+edited_df = st.data_editor(
+    df_ergebnis,
+    num_rows="dynamic",
+    use_container_width=True,
+    key="ergebniserfassung_matrix"
+)
+
+
+
+
+
