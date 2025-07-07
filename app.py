@@ -235,7 +235,3 @@ df_matrix = pd.DataFrame({col: [""] * 15 for col in columns})
 edited_matrix = st.data_editor(df_matrix, num_rows="dynamic", use_container_width=True)
 
 
-# Optional: show the current content for review
-st.markdown("### 📝 Eingetragene Einweisungen")
-st.dataframe(edited_matrix, use_container_width=True)
-
