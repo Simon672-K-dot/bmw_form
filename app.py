@@ -213,3 +213,60 @@ zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
 
 
 
+
+
+
+#---Seite 4:Mitarbeiter Einweisung---
+
+
+import streamlit as st
+import pandas as pd
+import ace_tools as tools
+
+# Title
+st.markdown('<h2 style="text-align:center;">🧾 Nachweis Mitarbeiter Einweisung</h2>', unsafe_allow_html=True)
+
+# Auftrags-ID and Freigabe Fields
+col_top_left, col_top_right = st.columns(2)
+with col_top_left:
+    nachweis_auftrag_id = st.text_input("📄 Auftrags-ID", key="nachweis_auftrag_id")
+with col_top_right:
+    nachweis_freigabe = st.text_input("✅ Freigabe", key="nachweis_freigabe")
+
+st.markdown("---")
+
+# Table Headers
+st.markdown("### 📋 Einweisungsübersicht")
+header_cols = st.columns([2, 2, 2, 2, 2])
+headers = [
+    "Name unterwiesene Person",
+    "Datum Unterweisung",
+    "Unterschrift unterwiesene Person",
+    "Unterschrift Unterweisender",
+    "Unterwiesen durch"
+]
+for col, header in zip(header_cols, headers):
+    col.markdown(f"**{header}**")
+
+# Table Rows
+rows = []
+for i in range(15):
+    cols = st.columns([2, 2, 2, 2, 2])
+    row = [
+        cols[0].text_input(f"{i+1}-name", label_visibility="collapsed", key=f"name_{i}"),
+        cols[1].date_input("", label_visibility="collapsed", key=f"datum_{i}"),
+        cols[2].text_input("", label_visibility="collapsed", key=f"unterschrift_person_{i}"),
+        cols[3].text_input("", label_visibility="collapsed", key=f"unterschrift_leiter_{i}"),
+        cols[4].text_input("", label_visibility="collapsed", key=f"unterwiesen_durch_{i}"),
+    ]
+    rows.append(row)
+
+# Convert to DataFrame
+df_nachweis = pd.DataFrame(rows, columns=headers)
+
+# Display Table
+tools.display_dataframe_to_user(name="Nachweis Mitarbeiter Einweisung", dataframe=df_nachweis)
+
+
+
+
