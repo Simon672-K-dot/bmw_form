@@ -320,21 +320,38 @@ with col8:
 with col9:
     io_fnr = st.selectbox("IO - F. NR.", ["VZ3 Neufahrn / AP", "VZ3 München / AP"])
 
-# Fehlerbilder Anzeige (A-F)
-st.markdown('<h4>Fehlerbilder:</h4>', unsafe_allow_html=True)
-st.markdown(
-    """
-    <div style='display:flex; gap:10px;'>
-        <div style='background-color:#FF6B6B;padding:10px;'>A</div>
-        <div style='background-color:#FF6B6B;padding:10px;'>B</div>
-        <div style='background-color:#FF6B6B;padding:10px;'>C</div>
-        <div style='background-color:#FF6B6B;padding:10px;'>D</div>
-        <div style='background-color:#FF6B6B;padding:10px;'>E</div>
-        <div style='background-color:#FF6B6B;padding:10px;'>F</div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# --- FEHLERBILDER ABSCHNITT ---
+st.markdown('<h4 style="margin-top: 30px;">🟥 Fehlerbilder:</h4>', unsafe_allow_html=True)
+
+# Erste Reihe: A, B, C mit Textfeldern
+cols_abc = st.columns([1, 4, 1, 4, 1, 4])
+with cols_abc[0]:
+    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">A</div>', unsafe_allow_html=True)
+with cols_abc[1]:
+    fehler_a = st.text_input(" ", key="fehler_a")
+with cols_abc[2]:
+    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">B</div>', unsafe_allow_html=True)
+with cols_abc[3]:
+    fehler_b = st.text_input(" ", key="fehler_b")
+with cols_abc[4]:
+    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">C</div>', unsafe_allow_html=True)
+with cols_abc[5]:
+    fehler_c = st.text_input(" ", key="fehler_c")
+
+# Zweite Reihe: D, E, F mit Textfeldern
+cols_def = st.columns([1, 4, 1, 4, 1, 4])
+with cols_def[0]:
+    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">D</div>', unsafe_allow_html=True)
+with cols_def[1]:
+    fehler_d = st.text_input(" ", key="fehler_d")
+with cols_def[2]:
+    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">E</div>', unsafe_allow_html=True)
+with cols_def[3]:
+    fehler_e = st.text_input(" ", key="fehler_e")
+with cols_def[4]:
+    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">F</div>', unsafe_allow_html=True)
+with cols_def[5]:
+    fehler_f = st.text_input(" ", key="fehler_f")
 
 # Ergebnisseingabe Tabelle
 st.markdown('<h4 style="margin-top:20px;">📥 Ergebnisseingabe</h4>', unsafe_allow_html=True)
@@ -351,9 +368,7 @@ edited_df = st.data_editor(
     num_rows="dynamic",
     use_container_width=True,
     key="ergebniserfassung_matrix"
-)
+) 
 
-
-
-
-
+       
+  
