@@ -190,3 +190,26 @@ for i in range(num_freigabezettel):
 
 
 
+
+
+
+# --- Seite 3:Nachweis Freigabe Section---
+st.markdown('<h2 style="text-align:center; background-color:#e6e6e6; padding:10px;">🧾 Nachweis Freigabe</h2>', unsafe_allow_html=True)
+
+# Row: Freigabe BBW and BMW
+col1, col2 = st.columns(2)
+with col1:
+    freigabe_bbw = st.text_input("✅ Freigabe B.B.W", key="freigabe_bbw")
+with col2:
+    freigabe_bmw = st.text_input("🏁 Freigabe BMW", key="freigabe_bmw")
+
+# Allgemeine Anweisungen (green area)
+st.markdown('<div style="background-color:#dff0d8;padding:10px;"><strong>✅ Allgemeine Anweisungen</strong></div>', unsafe_allow_html=True)
+anweisungen = st.text_area("", height=150, key="allgemeine_anweisungen")
+
+# Zusatz für QCat-gesteuerte Aufträge
+st.markdown('<div style="background-color:#f9f9f9;padding:10px;"><strong>📌 Zusatz für QCat-gesteuerte Aufträge:</strong></div>', unsafe_allow_html=True)
+zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
+
+
+
