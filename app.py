@@ -16,12 +16,13 @@ if pw_input != PASSWORD:
 # --- Titel & Kopfbereich ---
 st.markdown('<h1 style="text-align:center;">📄 Arbeitsanweisung</h1>', unsafe_allow_html=True)
 
-col_top1, col_top2 = st.columns(2)
-with col_top1:
-    sortierstart = st.date_input("📆 Sortierstart")
-    st.write("DEBUG - Sortierstart:", sortierstart)
-with col_top2:
-    freigabe = st.markdown("###📌 Freigabe")
+# --- Erste Zeile: Sortierstart ---
+sortierstart = st.date_input("📅 Sortierstart")
+st.write("DEBUG – Sortierstart:", sortierstart)
+
+# --- Zweite Zeile: Freigabe Überschrift ---
+st.markdown("### 📌 Freigabe")
+
 
 # Unterhalb von Freigabe: drei IDs nebeneinander
 col_ids1, col_ids2, col_ids3 = st.columns(3)
