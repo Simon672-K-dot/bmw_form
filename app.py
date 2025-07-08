@@ -21,7 +21,7 @@ with col_top1:
     sortierstart = st.date_input("📆 Sortierstart")
     st.write("DEBUG - Sortierstart:", sortierstart)
 with col_top2:
-    freigabe = st.text_input("📌 Freigabe")
+    freigabe = st.markdown("###📌 Freigabe")
 
 # Unterhalb von Freigabe: drei IDs nebeneinander
 col_ids1, col_ids2, col_ids3 = st.columns(3)
