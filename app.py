@@ -477,17 +477,19 @@ if st.button("✅ Formular abgeben"):
 
 
 
-if st.button("🔍 Zeige PDF-Feldnamen"):
-    import fitz
+if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
+    from PyPDF2 import PdfReader
 
-    doc = fitz.open("bbw_template_fillable.pdf")
+    pdf_path = "bbw_template_fillable.pdf"
+    reader = PdfReader(pdf_path)
+    fields = reader.get_fields()
+
     st.markdown("### 🧾 Gefundene Formularfelder:")
-    
-    for field in doc.widgets():
-        st.write(f"Field name: '{field.field_name}' | Value: '{field.field_value}'")
-
-    doc.close()
-
+    if fields:
+        for name in fields:
+            st.write(f"Field name: '{name}'")
+    else:
+        st.warning("⚠️ Keine Formularfelder gefunden.")
 
 
 
