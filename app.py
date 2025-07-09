@@ -457,6 +457,12 @@ if st.button("✅ Formular abgeben"):
     'Auftrags-ID BBW': auftrag_bbw,
     'AuftragsID BMW': auftrag_bmw,
     'Kritischster BI': str(kritischster_bi),
+    'Prüfumfang': pruefumfang,
+    'Tätigkeit': taetigkeit,
+    'Lieferant': lieferant,
+    'Fehlerbild A': fehlerbild_a,
+    'Fehlerbild B': fehlerbild_b,
+    'Fehlerbild C': fehlerbild_c,
 }
 
 
