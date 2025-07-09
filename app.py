@@ -443,14 +443,45 @@ def fill_pdf(template_path, output_path, data, image_file=None):
 
     # Optional image insertion
     if image_file:
+        from PIL import Image
+        import io
+    
         page1 = doc[0]
-        image_rect = fitz.Rect(560, 420, 800, 670)
-        page1.insert_image(image_rect, stream=image_file.read())
-
-    # ✅ Always save at the end
-    doc.save(output_path)
-    doc.close()
-
+    
+        # Define the target box
+        box_rect = fitz.Rect(445, 405, 585, 515)  # adjust if needed
+        box_width = box_rect.width
+        box_height = box_rect.height
+    
+        # Open and scale the image
+        img = Image.open(image_file)
+        img_width, img_height = img.size
+        scale = min(box_width / img_width, box_height / img_height)
+        new_width = int(img_width * scale)
+        new_height = int(img_height * scale)
+        img_resized = img.resize((new_width, new_height))
+    
+        # Convert image to byte stream
+        img_byte_arr = io.BytesIO()
+        img_resized.save(img_byte_arr, format="PNG")
+    
+        # Center the image inside the box
+        x0 = box_rect.x0 + (box_width - new_width) / 2
+        y0 = box_rect.y0 + (box_height - new_height) / 2
+        x1 = x0 + new_width
+        y1 = y0 + new_height
+        image_rect = fitz.Rect(x0, y0, x1, y1)
+    
+        # Optional: draw the border
+        page1.draw_rect(box_rect, color=(0, 0, 0), width=0.5)
+    
+        # Insert the image
+        page1.insert_image(image_rect, stream=img_byte_arr.getvalue())
+    
+        # Add caption (optional)
+        caption = "Bauteilbild"
+        page1.insert_text((box_rect.x0, box_rect.y1 + 10), caption, fontsize=8
+    
 
 
 
