@@ -424,9 +424,7 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 
 
 
-# -----------------------------------
-# ✅ Function to fill the PDF
-# -----------------------------------
+#FUNCTION 
 def fill_pdf(template_path, output_path, data, image_file=None):
     import fitz  # PyMuPDF
 
@@ -441,50 +439,37 @@ def fill_pdf(template_path, output_path, data, image_file=None):
                     widget.field_value = data[field_name]
                     widget.update()
 
-    # Optional image insertion
+    # ✅ Handle the actual image field (not manual coords)
     if image_file:
         from PIL import Image
         import io
 
-        page1 = doc[0]
-
-        # Define the target box
-        box_rect = fitz.Rect(445, 405, 585, 515)
-        box_width = box_rect.width
-        box_height = box_rect.height
-
-        # Open and scale the image
+        # Convert and resize the image
         img = Image.open(image_file)
-        img_width, img_height = img.size
-        scale = min(box_width / img_width, box_height / img_height)
-        new_width = int(img_width * scale)
-        new_height = int(img_height * scale)
-        img_resized = img.resize((new_width, new_height))
-
-        # Convert image to byte stream
         img_byte_arr = io.BytesIO()
-        img_resized.save(img_byte_arr, format="PNG")
+        img.save(img_byte_arr, format="PNG")
+        img_stream = img_byte_arr.getvalue()
 
-        # Center the image inside the box
-        x0 = box_rect.x0 + (box_width - new_width) / 2
-        y0 = box_rect.y0 + (box_height - new_height) / 2
-        x1 = x0 + new_width
-        y1 = y0 + new_height
-        image_rect = fitz.Rect(x0, y0, x1, y1)
+        # Insert the image into the image placeholder field
+        page1 = doc[0]  # Assuming it's on the first page
+        image_widget = None
 
-        # Optional: draw the border
-        page1.draw_rect(box_rect, color=(0, 0, 0), width=0.5)
+        for widget in page1.widgets():
+            if widget.field_name == "Bauteilbild":  # <-- match the new image field name
+                image_widget = widget
+                break
 
-        # Insert the image
-        page1.insert_image(image_rect, stream=img_byte_arr.getvalue())
+        if image_widget:
+            rect = image_widget.rect
+            page1.insert_image(rect, stream=img_stream)
+            # Optionally hide the original widget
+            image_widget.field_value = ""
+            image_widget.update()
 
-        # Add caption (optional)
-        caption = "Bauteilbild"
-        page1.insert_text((box_rect.x0, box_rect.y1 + 10), caption, fontsize=8)
-
-    # ✅ Save and close (IMPORTANT!)
+    # ✅ Save and close
     doc.save(output_path)
     doc.close()
+
 
 
 # --- FINAL SUBMIT BUTTON ---
@@ -528,20 +513,19 @@ if st.button("✅ Formular abgeben"):
 
     filled_filename = f"filled_{auftrag_bmw}.pdf"
 
-    # Pass uploaded image (if any)
-    fill_pdf("bbw_template_fillable.pdf", filled_filename, data, image_file=bild)
+# Call your updated PDF filling function
+fill_pdf("bbw_template_fillable.pdf", filled_filename, data, image_file=bild)
 
-    with open(filled_filename, "rb") as file:
-        st.download_button(
-            label="📥 PDF herunterladen",
-            data=file,
-            file_name=filled_filename,
-            mime="application/pdf"
-        )
+# Create a download button for the filled PDF
+with open(filled_filename, "rb") as file:
+    st.download_button(
+        label="📥 PDF herunterladen",
+        data=file,
+        file_name=filled_filename,
+        mime="application/pdf"
+    )
 
-    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
-
-
+st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
 
 
 
