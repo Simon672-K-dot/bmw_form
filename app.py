@@ -1,4 +1,4 @@
-#trigger commit for streamlit refresh 
+
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -431,17 +431,16 @@ import fitz  # PyMuPDF
 
 def fill_pdf(template_path, output_path, data):
     doc = fitz.open(template_path)
-    page = doc[0]
 
-    # ➕ We'll fix these positions next
-    page.insert_text((150, 120), data['sortierstart'], fontsize=10)
-    page.insert_text((150, 140), data['auftrag_bbw'], fontsize=10)
-    page.insert_text((150, 160), data['auftrag_bmw'], fontsize=10)
+    for page in doc:
+        for widget in page.widgets():
+            field_name = widget.field_name.lower()  # make lowercase
+            if field_name in data:
+                widget.field_value = data[field_name]
+                widget.update()
 
     doc.save(output_path)
     doc.close()
-
-
 
 
 
@@ -455,14 +454,15 @@ from io import BytesIO
 if st.button("✅ Formular abgeben"):
     data = {
         'sortierstart': str(sortierstart),
-        'auftrag_bbw': auftrag_bbw,
-        'auftrag_bmw': auftrag_bmw,
+        'auftrags-id bbw': auftrag_bbw,
+        'auftrags-id bmw': auftrag_bmw,
+        'kritischster bi': str(kritischster_bi),
+        # Add more keys as you map the fields
     }
 
     filled_filename = f"filled_{auftrag_bmw}.pdf"
-    fill_pdf("bbw_template.pdf", filled_filename, data)
+    fill_pdf("bbw_template_fillable.pdf", filled_filename, data)
 
-    # Read the file and offer it for download
     with open(filled_filename, "rb") as file:
         st.download_button(
             label="📥 PDF herunterladen",
