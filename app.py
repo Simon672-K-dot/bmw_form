@@ -450,6 +450,8 @@ def fill_pdf(template_path, output_path, data):
 
 
 # --- FINAL SUBMIT BUTTON ---
+from io import BytesIO
+
 if st.button("✅ Formular abgeben"):
     data = {
         'sortierstart': str(sortierstart),
@@ -457,10 +459,19 @@ if st.button("✅ Formular abgeben"):
         'auftrag_bmw': auftrag_bmw,
     }
 
-    fill_pdf("bbw_template.pdf", f"filled_{auftrag_bmw}.pdf", data)
+    filled_filename = f"filled_{auftrag_bmw}.pdf"
+    fill_pdf("bbw_template.pdf", filled_filename, data)
+
+    # Read the file and offer it for download
+    with open(filled_filename, "rb") as file:
+        st.download_button(
+            label="📥 PDF herunterladen",
+            data=file,
+            file_name=filled_filename,
+            mime="application/pdf"
+        )
 
     st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
-
 
 
 
