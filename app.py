@@ -427,7 +427,7 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 # -----------------------------------
 # ✅ Function to fill the PDF
 # -----------------------------------
-def fill_pdf(template_path, output_path, data):
+def fill_pdf(template_path, output_path, data, image_file=None):
     import fitz  # PyMuPDF
     doc = fitz.open(template_path)
 
@@ -440,10 +440,14 @@ def fill_pdf(template_path, output_path, data):
                     widget.field_value = data[field_name]
                     widget.update()
 
+    # Insert image on page 1 if provided
+    if image_file:
+        page1 = doc[0]  # first page (0-indexed)
+        image_rect = fitz.Rect(460, 450, 780, 670)  # Adjust based on screenshot
+        page1.insert_image(image_rect, stream=image_file.read())
+
     doc.save(output_path)
     doc.close()
-
-
 
 
 
@@ -465,9 +469,44 @@ if st.button("✅ Formular abgeben"):
     'Fehlerbild C': fehlerbild_c,
 }
 
+if st.button("✅ Formular abgeben"):
+    data = {
+        'Sortierstart': str(sortierstart),
+        'Auftrags-ID BBW': auftrag_bbw,
+        'AuftragsID BMW': auftrag_bmw,
+        'Kritischster BI': str(kritischster_bi),
+        'Prüfumfang': pruefumfang,
+        'Tätigkeit': taetigkeit,
+        'Lieferant': lieferant,
+        'Fehlerbild A': fehlerbild_a,
+        'Fehlerbild B': fehlerbild_b,
+        'Fehlerbild C': fehlerbild_c,
+        'Fehlerbild D': fehlerbild_d,
+        'Fehlerbild E': fehlerbild_e,
+        'Fehlerbild F': fehlerbild_f,
+        'FZG / Motorentyp': motorentyp,
+        'Verbaukontakt': verbautakt,
+        'Tagesbedarf': tagesbedarf,
+        'Abteilung BMW': abteilung_bmw,
+        'Ansprechpartner BBW': ansprechpartner_bbw,
+        'Ansprechpartner Kunde': ansprechpartner_kunde,
+        'Sortier-/Prüfort': pruefort,
+        'Arbeitsort(e)': arbeitsorte,
+        'Sortierregel': sortierregel,
+        'Markierung gemäß Vorgabe': io_markierung,
+        'Persönliche Schutzausrüstung (z.B. Brille, Handschuhe)': psa,
+        'Handschuhe': handschuhe,
+        'Zusätzliche Standards': zusaetzliche_standards,
+        'COP-relevant': cop,
+        'ESD-relevant': esd,
+        'TecSa-relevant': tecsa,
+        'Prüfablauf': pruefablauf
+    }
 
     filled_filename = f"filled_{auftrag_bmw}.pdf"
-    fill_pdf("bbw_template_fillable.pdf", filled_filename, data)
+
+    # Pass uploaded image (if any)
+    fill_pdf("bbw_template_fillable.pdf", filled_filename, data, image_file=bild)
 
     with open(filled_filename, "rb") as file:
         st.download_button(
