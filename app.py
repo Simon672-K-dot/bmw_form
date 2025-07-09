@@ -453,12 +453,12 @@ from io import BytesIO
 
 if st.button("✅ Formular abgeben"):
     data = {
-        'Sortierstart:': str(sortierstart),
-        'Auftrags-ID BBW:': auftrag_bbw,
-        'Auftrags-ID BMW:': auftrag_bmw,
-        'Kritischster BI:': str(kritischster_bi),
-        # Add more keys as you map the fields
-    }
+    'Sortierstart': str(sortierstart),
+    'AuftragsID BBW': auftrag_bbw,
+    'AuftragsID BMW': auftrag_bmw,
+    'Kritischster BI': str(kritischster_bi),
+}
+
 
     filled_filename = f"filled_{auftrag_bmw}.pdf"
     fill_pdf("bbw_template_fillable.pdf", filled_filename, data)
