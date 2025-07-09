@@ -442,9 +442,9 @@ def fill_pdf(template_path, output_path, data, image_file=None):
 
     # Insert image on page 1 if provided
     if image_file:
-        page1 = doc[0]  # first page (0-indexed)
-        image_rect = fitz.Rect(460, 450, 780, 670)  # Adjust based on screenshot
-        page1.insert_image(image_rect, stream=image_file.read())
+    page1 = doc[0]
+    image_rect = fitz.Rect(560, 420, 800, 670)  # Angepasste Koordinaten
+    page1.insert_image(image_rect, stream=image_file.read())
 
     doc.save(output_path)
     doc.close()
