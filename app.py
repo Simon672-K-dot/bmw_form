@@ -425,13 +425,37 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 
 
 
-
-
-
 # --- FINAL SUBMIT BUTTON ---
-st.markdown("---")
-st.markdown("## 📤 Abgabe")
-
 if st.button("✅ Formular abgeben"):
-    st.success("Das Formular wurde erfolgreich abgegeben!")
-   
+    data = {
+        'sortierstart': str(sortierstart),
+        'auftrag_bbw': auftrag_bbw,
+        'auftrag_bmw': auftrag_bmw,
+    }
+
+    fill_pdf("bbw_template.pdf", f"filled_{auftrag_bmw}.pdf", data)
+
+    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
+
+
+
+
+
+
+
+# -----------------------------------
+# ✅ Function to fill the PDF
+# -----------------------------------
+import fitz  # PyMuPDF
+
+def fill_pdf(template_path, output_path, data):
+    doc = fitz.open(template_path)
+    page = doc[0]
+
+    # ➕ We'll fix these positions next
+    page.insert_text((150, 120), data['sortierstart'], fontsize=10)
+    page.insert_text((150, 140), data['auftrag_bbw'], fontsize=10)
+    page.insert_text((150, 160), data['auftrag_bmw'], fontsize=10)
+
+    doc.save(output_path)
+    doc.close()
