@@ -429,7 +429,8 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 # -----------------------------------
 def fill_pdf(template_path, output_path, data, image_file=None):
     import fitz  # PyMuPDF
-    doc = fitz.open(template_path)
+
+    doc = fitz.open(template_path)  # ✅ Always define this, even without an image
 
     for page in doc:
         widgets = page.widgets()
@@ -440,15 +441,16 @@ def fill_pdf(template_path, output_path, data, image_file=None):
                     widget.field_value = data[field_name]
                     widget.update()
 
-    # Insert image on page 1 if provided
+    # Optional image insertion
     if image_file:
         page1 = doc[0]
         image_rect = fitz.Rect(560, 420, 800, 670)
         page1.insert_image(image_rect, stream=image_file.read())
 
-# ✅ Always save the file — even without an image
-doc.save(output_path)
-doc.close()
+    # ✅ Always save at the end
+    doc.save(output_path)
+    doc.close()
+
 
 
 
