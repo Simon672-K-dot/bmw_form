@@ -481,7 +481,8 @@ def fill_pdf(template_path, output_path, data, image_file=None):
         # Add caption (optional)
         caption = "Bauteilbild"
         page1.insert_text((box_rect.x0, box_rect.y1 + 10), caption, fontsize=8)
-
+ doc.save(output_path)
+    doc.close()
 
 
 # --- FINAL SUBMIT BUTTON ---
