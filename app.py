@@ -433,11 +433,11 @@ def fill_pdf(template_path, output_path, data):
     doc = fitz.open(template_path)
 
     for page in doc:
-        for widget in page.widgets():
-            field_name = widget.field_name.lower()  # make lowercase
-            if field_name in data:
-                widget.field_value = data[field_name]
-                widget.update()
+        for field in doc.get_page_widgets(page.number):
+            name = field.field_name
+            if name in data:
+                field.field_value = data[name]
+                field.update()
 
     doc.save(output_path)
     doc.close()
@@ -472,6 +472,20 @@ if st.button("✅ Formular abgeben"):
         )
 
     st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
+
+
+
+
+
+if st.button("🔍 Zeige PDF-Feldnamen"):
+    import fitz
+
+    doc = fitz.open("bbw_template_fillable.pdf")
+    st.markdown("### 🧾 Gefundene Formularfelder:")
+    for page in doc:
+        for field in doc.get_page_widgets(page.number):
+            st.write(f"Field name: '{field.field_name}'")
+    doc.close()
 
 
 
