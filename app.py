@@ -482,11 +482,11 @@ if st.button("🔍 Zeige PDF-Feldnamen"):
 
     doc = fitz.open("bbw_template_fillable.pdf")
     st.markdown("### 🧾 Gefundene Formularfelder:")
-    for page in doc:
-        for field in doc.get_page_widgets(page.number):
-            st.write(f"Field name: '{field.field_name}'")
-    doc.close()
+    
+    for field in doc.widgets():
+        st.write(f"Field name: '{field.field_name}' | Value: '{field.field_value}'")
 
+    doc.close()
 
 
 
