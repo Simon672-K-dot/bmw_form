@@ -427,21 +427,21 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 # -----------------------------------
 # ✅ Function to fill the PDF
 # -----------------------------------
-import fitz  # PyMuPDF
-
 def fill_pdf(template_path, output_path, data):
+    import fitz  # PyMuPDF
     doc = fitz.open(template_path)
 
     for page in doc:
-        for field in doc.get_page_widgets(page.number):
-            name = field.field_name
-            if name in data:
-                field.field_value = data[name]
-                field.update()
+        widgets = page.widgets()
+        if widgets:
+            for widget in widgets:
+                field_name = widget.field_name
+                if field_name in data:
+                    widget.field_value = data[field_name]
+                    widget.update()
 
     doc.save(output_path)
     doc.close()
-
 
 
 
