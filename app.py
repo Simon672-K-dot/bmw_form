@@ -84,7 +84,7 @@ with col_a:
 with col_b:
     pruefablauf = st.text_area("📋 Prüfablauf")
 with col_c:
-    bild = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"])
+    bild1 = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"], key="bild1")
 
 # --- Gebotsschilder ---
 st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- und Warnschilder (Bilderauswahl)</h3>', unsafe_allow_html=True)
@@ -477,7 +477,7 @@ def fill_pdf(template_path, output_path, data, image_file=None):
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
 
-bild = st.file_uploader("📸 Bauteilbild hochladen", type=["png", "jpg", "jpeg"])
+
 
 if st.button("✅ Formular abgeben"):
     data = {
@@ -516,7 +516,9 @@ if st.button("✅ Formular abgeben"):
     filled_filename = f"filled_{auftrag_bmw}.pdf"
 
     # Call your updated PDF filling function
-    fill_pdf("bbw_template_fillable.pdf", filled_filename, data, image_file=bild)
+    image_files = [bild1, bild2, bild3]  # Replace with actual variable names from your form
+    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_files)
+
     
     # Create a download button for the filled PDF
     with open(filled_filename, "rb") as file:
