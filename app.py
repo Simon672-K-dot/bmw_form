@@ -443,28 +443,22 @@ def fill_pdf(template_path, output_path, data, image_file=None):
     if image_file:
         from PIL import Image
         import io
-
+    
         # Convert and resize the image
         img = Image.open(image_file)
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format="PNG")
         img_stream = img_byte_arr.getvalue()
-
+    
         # Insert the image into the image placeholder field
-        page1 = doc[0]  # Assuming it's on the first page
-        image_widget = None
+        page1 = doc[0]  # First page of the PDF
+    
+        # Insert image using fixed coordinates in points (converted from inches)
+        # Left=6.4686, Bottom=0.9582, Right=11.2012, Top=3.6078 → convert to points (×72)
+        image_rect = fitz.Rect(465.74, 68.99, 806.49, 259.76)
+        page1.insert_image(image_rect, stream=img_stream)
+    
 
-        for widget in page1.widgets():
-            if widget.field_name == "Bauteilbild":  # <-- match the new image field name
-                image_widget = widget
-                break
-
-        if image_widget:
-            rect = image_widget.rect
-            page1.insert_image(rect, stream=img_stream)
-            # Optionally hide the original widget
-            image_widget.field_value = ""
-            image_widget.update()
 
     # ✅ Save and close
     doc.save(output_path)
