@@ -470,8 +470,6 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
 
 
 
-bild = st.file_uploader("📸 Bauteilbild hochladen", type=["png", "jpg", "jpeg"])
-
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
 
@@ -516,7 +514,7 @@ if st.button("✅ Formular abgeben"):
     # Call your updated PDF filling function
     
     image_fields = {
-    "Bauteilbild_box_1": bild  # this assumes 'bild' is your file_uploader input earlier
+    "Bauteilbild_box_1": bild1  # this assumes 'bild' is your file_uploader input earlier
     }
 
     fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
