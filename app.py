@@ -428,7 +428,7 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 
 
 
-def fill_pdf(template_path, output_path, data, image_file=None):
+def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None):
     import fitz  # PyMuPDF
     from PIL import Image
     import io
@@ -445,31 +445,28 @@ def fill_pdf(template_path, output_path, data, image_file=None):
                     widget.field_value = data[field_name]
                     widget.update()
 
-    # Insert image into 'Bauteilbild_box'
-    if image_file:
-        img = Image.open(image_file).convert("RGB")
-        img_byte_arr = io.BytesIO()
-        img.save(img_byte_arr, format="PNG")
-        img_stream = img_byte_arr.getvalue()
+    # ✅ Insert images at placeholder fields
+    if image_dict:
+        for field_name, img_file in image_dict.items():
+            if img_file:
+                img = Image.open(img_file).convert("RGB")
+                img_byte_arr = io.BytesIO()
+                img.save(img_byte_arr, format="PNG")
+                img_stream = img_byte_arr.getvalue()
 
-        page1 = doc[0]
-        image_rect = None
-
-        widgets = page1.widgets()
-        for widget in widgets:
-            if widget.field_name == "Bauteilbild_box":
-                image_rect = widget.rect
-                widget.field_value = ""  # Clear text field
-                widget.update()
-                break
-
-        if image_rect:
-            page1.insert_image(image_rect, stream=img_stream)
-        else:
-            print("⚠️ Hinweis: Das Feld 'Bauteilbild_box' wurde nicht im PDF gefunden.")
+                for page in doc:
+                    widgets = page.widgets()
+                    for widget in widgets:
+                        if widget.field_name == field_name:
+                            image_rect = widget.rect
+                            widget.field_value = ""
+                            widget.update()
+                            page.insert_image(image_rect, stream=img_stream)
+                            break
 
     doc.save(output_path)
     doc.close()
+
 
 
 
@@ -516,8 +513,13 @@ if st.button("✅ Formular abgeben"):
     filled_filename = f"filled_{auftrag_bmw}.pdf"
 
     # Call your updated PDF filling function
-    image_files = [bild1, bild2, bild3]  # Replace with actual variable names from your form
-    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_files)
+    
+    image_fields = {
+    "Bauteilbild_box_1": bild  # this assumes 'bild' is your file_uploader input earlier
+    }
+
+    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
+
 
     
     # Create a download button for the filled PDF
