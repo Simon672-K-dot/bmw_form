@@ -441,29 +441,31 @@ def fill_pdf(template_path, output_path, data, image_file=None):
 
     # ✅ Handle the actual image field (not manual coords)
     if image_file:
-        from PIL import Image
-        import io
-    
-        # Convert and resize the image
+        # Convert image to bytes
         img = Image.open(image_file)
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format="PNG")
         img_stream = img_byte_arr.getvalue()
-    
-        # Insert the image into the image placeholder field
-        page1 = doc[0]  # First page of the PDF
-    
-        # Insert image using fixed coordinates in points (converted from inches)
-        # Left=6.4686, Bottom=0.9582, Right=11.2012, Top=3.6078 → convert to points (×72)
-        image_rect = fitz.Rect(465.74, 68.99, 806.49, 259.76)
-        page1.insert_image(image_rect, stream=img_stream)
-    
 
+        page1 = doc[0]
 
-    # ✅ Save and close
+        # Look for the placeholder text field named "Bauteilbild_box"
+        image_rect = None
+        widgets = page1.widgets()
+        for widget in widgets:
+            if widget.field_name == "Bauteilbild_box":
+                image_rect = widget.rect
+                widget.field_value = ""  # Clear placeholder text
+                widget.update()
+                break
+
+        if image_rect:
+            page1.insert_image(image_rect, stream=img_stream)
+        else:
+            print("⚠️ Hinweis: Das Feld 'Bauteilbild_box' wurde nicht im PDF gefunden.")
+
     doc.save(output_path)
     doc.close()
-
 
 
 # --- FINAL SUBMIT BUTTON ---
