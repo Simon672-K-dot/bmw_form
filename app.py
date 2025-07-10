@@ -470,6 +470,7 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
 
 
 
+bild = st.file_uploader("📸 Bauteilbild hochladen", type=["png", "jpg", "jpeg"])
 
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
