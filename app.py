@@ -513,20 +513,20 @@ if st.button("✅ Formular abgeben"):
 
     filled_filename = f"filled_{auftrag_bmw}.pdf"
 
-# Call your updated PDF filling function
-fill_pdf("bbw_template_fillable.pdf", filled_filename, data, image_file=bild)
+    # Call your updated PDF filling function
+    fill_pdf("bbw_template_fillable.pdf", filled_filename, data, image_file=bild)
+    
+    # Create a download button for the filled PDF
+    with open(filled_filename, "rb") as file:
+        st.download_button(
+            label="📥 PDF herunterladen",
+            data=file,
+            file_name=filled_filename,
+            mime="application/pdf"
+        )
 
-# Create a download button for the filled PDF
-with open(filled_filename, "rb") as file:
-    st.download_button(
-        label="📥 PDF herunterladen",
-        data=file,
-        file_name=filled_filename,
-        mime="application/pdf"
-    )
-
-st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
-
+    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
+    
 
 
 if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
