@@ -425,11 +425,17 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 
 
 #FUNCTION 
+
+
+
 def fill_pdf(template_path, output_path, data, image_file=None):
     import fitz  # PyMuPDF
+    from PIL import Image
+    import io
 
     doc = fitz.open(template_path)
 
+    # Fill text fields
     for page in doc:
         widgets = page.widgets()
         if widgets:
@@ -439,23 +445,21 @@ def fill_pdf(template_path, output_path, data, image_file=None):
                     widget.field_value = data[field_name]
                     widget.update()
 
-    # ✅ Handle the actual image field (not manual coords)
+    # Insert image into 'Bauteilbild_box'
     if image_file:
-        # Convert image to bytes
-        img = Image.open(image_file)
+        img = Image.open(image_file).convert("RGB")
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format="PNG")
         img_stream = img_byte_arr.getvalue()
 
         page1 = doc[0]
-
-        # Look for the placeholder text field named "Bauteilbild_box"
         image_rect = None
+
         widgets = page1.widgets()
         for widget in widgets:
             if widget.field_name == "Bauteilbild_box":
                 image_rect = widget.rect
-                widget.field_value = ""  # Clear placeholder text
+                widget.field_value = ""  # Clear text field
                 widget.update()
                 break
 
@@ -466,6 +470,8 @@ def fill_pdf(template_path, output_path, data, image_file=None):
 
     doc.save(output_path)
     doc.close()
+
+
 
 
 # --- FINAL SUBMIT BUTTON ---
