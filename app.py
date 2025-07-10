@@ -471,7 +471,7 @@ def fill_pdf(template_path, output_path, data, image_file=None):
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
 
-
+bild = st.file_uploader("📸 Bauteilbild hochladen", type=["png", "jpg", "jpeg"])
 
 if st.button("✅ Formular abgeben"):
     data = {
