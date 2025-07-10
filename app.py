@@ -514,7 +514,7 @@ if st.button("✅ Formular abgeben"):
     # Call your updated PDF filling function
     
     image_fields = {
-    "Bauteilbild_box_1": bild1  # this assumes 'bild' is your file_uploader input earlier
+    "Bauteilbild_box": bild1  # this assumes 'bild' is your file_uploader input earlier
     }
 
     fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
