@@ -325,49 +325,6 @@ edited_df = st.data_editor(
 
 
 
-#---Seite 7: Teil von Ergebniserfassung---
-
-
-import streamlit as st
-import pandas as pd
-
-# Set page section title (continuation of Ergebniserfassung, no new header)
-st.markdown("### 👷‍♂️ Mitarbeitereintrag zur Ergebniserfassung")
-
-# Initial table structure for Mitarbeiter-Eintrag
-default_data = {
-    "Bearbeitung durch Mitarbeiter": ["" for _ in range(5)],
-    "Anfangszeit der Prüfung": ["" for _ in range(5)],
-    "Endzeit der Prüfung": ["" for _ in range(5)],
-    "Personalnr.": ["" for _ in range(5)],
-}
-
-df_mitarbeiter = pd.DataFrame(default_data)
-
-# Use data editor for dynamic editing
-edited_mitarbeiter = st.data_editor(
-    df_mitarbeiter,
-    num_rows="dynamic",
-    use_container_width=True
-)
-
-# Right section: Freigabe & Buchung
-st.markdown("### 🧾 Freigabe und Buchung")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    freigabe_checkbox = st.checkbox("✅ Freigabe für Ergebniserfassung erteilt")
-    personalnr_freigabe = st.text_input("👤 Personalnr. (Freigabe)", key="freigabe_personal")
-
-with col2:
-    buchung_checkbox = st.checkbox("✅ Buchung der Ergebniserfassung im B.B.W. Portal erfolgt")
-    personalnr_buchung = st.text_input("👤 Personalnr. (B.B.W. Portal)", key="buchung_personal")
-
-# Remarks
-st.markdown("### 📝 Bemerkungen")
-bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
-
 
 
 
