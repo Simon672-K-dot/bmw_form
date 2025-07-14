@@ -217,23 +217,6 @@ zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
 
 
 
-#---Seite 4:Mitarbeiter Einweisung---
-
-st.markdown("## 🧾 Einweisungsübersicht")
-
-# Define 15 rows with 5 columns
-columns = [
-    "Name unterwiesene Person",
-    "Datum Unterweisung",
-    "Unterschrift unterwiesene Person",
-    "Unterschrift Unterweisender",
-    "Unterwiesen durch"
-]
-
-df_matrix = pd.DataFrame({col: [""] * 15 for col in columns})
-
-# Editable matrix-style table
-edited_matrix = st.data_editor(df_matrix, num_rows="dynamic", use_container_width=True)
 
 
 
@@ -283,43 +266,7 @@ if not edited_df.empty:
 
 
 
-#---Seite 6: Ergebnisserfassung 
 
-
-import streamlit as st
-import pandas as pd
-
-# Title Section
-st.markdown('<h2 style="text-align:center;">📊 Ergebniserfassung</h2>', unsafe_allow_html=True)
-
-# Header section: Auftrag, Lieferant, Teile-Nr., Teilebezeichnung
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    auftrag = st.text_input("Auftrag", value="19991", disabled=True)
-with col2:
-    lieferant = st.text_input("Lieferant", value="DAIMAY FRANCE")
-with col3:
-    teil_nr = st.text_input("Teile-Nr.")
-with col4:
-    teil_bez = st.text_input("Teilebezeichnung")
-
-# Sub-header: Datum, Art der Tätigkeit, Art der Prüfung
-col5, col6, col7 = st.columns(3)
-with col5:
-    datum = st.date_input("📅 Datum")
-with col6:
-    taetigkeit = st.text_input("Art der Tätigkeit")
-with col7:
-    pruefart = st.selectbox("Art der Prüfung", [
-        "Erstprüfung", "200% Prüfung", "Wdh. Prüfung IO", "Wdh. Prüfung NIO"
-    ])
-
-# Prüfort & IO-F-NR
-col8, col9 = st.columns(2)
-with col8:
-    pruefort = st.selectbox("Prüfort", ["Q-Fläche", "Bandbegleitend"])
-with col9:
-    io_fnr = st.selectbox("IO - F. NR.", ["VZ3 Neufahrn / AP", "VZ3 München / AP"])
 
 # --- FEHLERBILDER ABSCHNITT ---
 st.markdown('<h4 style="margin-top: 30px;">🟥 Fehlerbilder:</h4>', unsafe_allow_html=True)
