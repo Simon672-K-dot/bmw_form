@@ -84,7 +84,7 @@ with col_a:
 with col_b:
     pruefablauf = st.text_area("📋 Prüfablauf")
 with col_c:
-    bild = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"])
+    bild1 = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"], key="bild1")
 
 # --- Gebotsschilder ---
 st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- und Warnschilder (Bilderauswahl)</h3>', unsafe_allow_html=True)
@@ -424,14 +424,127 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 
 
 
+#FUNCTION 
+
+
+
+def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None):
+    import fitz  # PyMuPDF
+    from PIL import Image
+    import io
+
+    doc = fitz.open(template_path)
+
+    # Fill text fields
+    for page in doc:
+        widgets = page.widgets()
+        if widgets:
+            for widget in widgets:
+                field_name = widget.field_name
+                if field_name in data:
+                    widget.field_value = data[field_name]
+                    widget.update()
+
+    # ✅ Insert images at placeholder fields
+    if image_dict:
+        for field_name, img_file in image_dict.items():
+            if img_file:
+                img = Image.open(img_file).convert("RGB")
+                img_byte_arr = io.BytesIO()
+                img.save(img_byte_arr, format="PNG")
+                img_stream = img_byte_arr.getvalue()
+
+                for page in doc:
+                    widgets = page.widgets()
+                    for widget in widgets:
+                        if widget.field_name == field_name:
+                            image_rect = widget.rect
+                            widget.field_value = ""
+                            widget.update()
+                            page.insert_image(image_rect, stream=img_stream)
+                            break
+
+    doc.save(output_path)
+    doc.close()
 
 
 
 
 # --- FINAL SUBMIT BUTTON ---
-st.markdown("---")
-st.markdown("## 📤 Abgabe")
+from io import BytesIO
+
+
 
 if st.button("✅ Formular abgeben"):
-    st.success("Das Formular wurde erfolgreich abgegeben!")
+    data = {
+        'Sortierstart': str(sortierstart),
+        'Auftrags-ID BBW': auftrag_bbw,
+        'AuftragsID BMW': auftrag_bmw,
+        'Kritischster BI': str(kritischster_bi),
+        'Prüfumfang': pruefumfang,
+        'Tätigkeit': taetigkeit,
+        'Lieferant': lieferant,
+        'Fehlerbild A': fehlerbild_a,
+        'Fehlerbild B': fehlerbild_b,
+        'Fehlerbild C': fehlerbild_c,
+        'Fehlerbild D': fehlerbild_d,
+        'Fehlerbild E': fehlerbild_e,
+        'Fehlerbild F': fehlerbild_f,
+        'FZG / Motorentyp': motorentyp,
+        'Verbaukontakt': verbautakt,
+        'Tagesbedarf': tagesbedarf,
+        'Abteilung BMW': abteilung_bmw,
+        'Ansprechpartner BBW': ansprechpartner_bbw,
+        'Ansprechpartner Kunde': ansprechpartner_kunde,
+        'Sortier-/Prüfort': pruefort,
+        'Arbeitsort(e)': arbeitsorte,
+        'Sortierregel': sortierregel,
+        'Markierung gemäß Vorgabe': io_markierung,
+        'Persönliche Schutzausrüstung (z.B. Brille, Handschuhe)': psa,
+        'Handschuhe': handschuhe,
+        'Zusätzliche Standards': zusaetzliche_standards,
+        'COP-relevant': cop,
+        'ESD-relevant': esd,
+        'TecSa-relevant': tecsa,
+        'Prüfablauf': pruefablauf
+    }
+
+    filled_filename = f"filled_{auftrag_bmw}.pdf"
+
+    # Call your updated PDF filling function
+    
+    image_fields = {
+    "Bauteilbild_box": bild1  # this assumes 'bild' is your file_uploader input earlier
+    }
+
+    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
+
+
+    
+    # Create a download button for the filled PDF
+    with open(filled_filename, "rb") as file:
+        st.download_button(
+            label="📥 PDF herunterladen",
+            data=file,
+            file_name=filled_filename,
+            mime="application/pdf"
+        )
+
+    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
+    
+
+
+if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
+    from PyPDF2 import PdfReader
+
+    pdf_path = "bbw_template_fillable.pdf"
+    reader = PdfReader(pdf_path)
+    fields = reader.get_fields()
+
+    st.markdown("### 🧾 Gefundene Formularfelder:")
+    if fields:
+        for name in fields:
+            st.write(f"Field name: '{name}'")
+    else:
+        st.warning("⚠️ Keine Formularfelder gefunden.")
    
