@@ -324,6 +324,22 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
     while len(doc) > 8:
         doc.delete_page(len(doc) - 1)
 
+
+
+        # ➕ Neue Seiten für zusätzliche Bilder (z.B. Bauteildokumentation)
+    if extra_images:
+        for img_file in extra_images:
+            img = Image.open(img_file).convert("RGB")
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format="PNG")
+            img_stream = img_byte_arr.getvalue()
+
+            # Neue leere Seite (A4-Größe)
+            page = doc.new_page(width=595, height=842)
+
+            # Bild auf Seite einfügen mit Rand
+            page.insert_image(fitz.Rect(50, 50, 545, 792), stream=img_stream)
+
     doc.save(output_path)
     doc.close()
     
