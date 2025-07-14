@@ -156,7 +156,8 @@ def render_block(typ, index):
     with col_img:
         bild = st.file_uploader(f"📸 Bild für {typ} {index+1}", type=["jpg", "jpeg", "png"], key=f"img_{typ}_{index}")
         if bild:
-            st.image(bild, use_column_width=True)
+            st.image(bild, use_container_width=True)
+
 
     with col_kommentar:
         st.text_area("💬 Kommentar", height=200, key=f"kommentar_{typ}_{index}")
