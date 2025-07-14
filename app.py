@@ -305,9 +305,14 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
                             widget.update()
                             page.insert_image(image_rect, stream=img_stream)
                             break
+        # ✅ Remove extra pages after Anhang
+    while len(doc) > 8:
+        doc.delete_page(len(doc) - 1)
 
     doc.save(output_path)
     doc.close()
+    
+   
 
 
 
@@ -402,15 +407,6 @@ if st.button("✅ Formular abgeben"):
     st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF generiert!")
 
     
-
-
-
-
-
-
-
-
-
 
 
 
