@@ -266,68 +266,6 @@ if not edited_df.empty:
 
 
 
-
-
-# --- FEHLERBILDER ABSCHNITT ---
-st.markdown('<h4 style="margin-top: 30px;">🟥 Fehlerbilder:</h4>', unsafe_allow_html=True)
-
-# Erste Reihe: A, B, C mit Textfeldern
-cols_abc = st.columns([1, 4, 1, 4, 1, 4])
-with cols_abc[0]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">A</div>', unsafe_allow_html=True)
-with cols_abc[1]:
-    fehler_a = st.text_input(" ", key="fehler_a")
-with cols_abc[2]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">B</div>', unsafe_allow_html=True)
-with cols_abc[3]:
-    fehler_b = st.text_input(" ", key="fehler_b")
-with cols_abc[4]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">C</div>', unsafe_allow_html=True)
-with cols_abc[5]:
-    fehler_c = st.text_input(" ", key="fehler_c")
-
-# Zweite Reihe: D, E, F mit Textfeldern
-cols_def = st.columns([1, 4, 1, 4, 1, 4])
-with cols_def[0]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">D</div>', unsafe_allow_html=True)
-with cols_def[1]:
-    fehler_d = st.text_input(" ", key="fehler_d")
-with cols_def[2]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">E</div>', unsafe_allow_html=True)
-with cols_def[3]:
-    fehler_e = st.text_input(" ", key="fehler_e")
-with cols_def[4]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">F</div>', unsafe_allow_html=True)
-with cols_def[5]:
-    fehler_f = st.text_input(" ", key="fehler_f")
-
-# Ergebnisseingabe Tabelle
-st.markdown('<h4 style="margin-top:20px;">📥 Ergebnisseingabe</h4>', unsafe_allow_html=True)
-
-columns = [
-    "Lieferschein Nr.", "HU-Nummer", "ID OK", "Gesamt geprüft", "IO",
-    "NIO A", "NIO B", "NIO C", "NIO D", "NIO E", "NIO F",
-    "NIO Gesamt", "Nachgearbeitet", "Rest NIO", "Bemerkung"
-]
-df_ergebnis = pd.DataFrame(columns=columns)
-
-edited_df = st.data_editor(
-    df_ergebnis,
-    num_rows="dynamic",
-    use_container_width=True,
-    key="ergebniserfassung_matrix"
-) 
-
-       
-
-
-
-
-
-
-
-
-
 #FUNCTION 
 
 
