@@ -473,65 +473,106 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
 
-
-
 if st.button("✅ Formular abgeben"):
     data = {
-        'Sortierstart': str(sortierstart),
-        'Auftrags-ID BBW': auftrag_bbw,
-        'AuftragsID BMW': auftrag_bmw,
-        'Kritischster BI': str(kritischster_bi),
-        'Prüfumfang': pruefumfang,
-        'Tätigkeit': taetigkeit,
-        'Lieferant': lieferant,
-        'Fehlerbild A': fehlerbild_a,
-        'Fehlerbild B': fehlerbild_b,
-        'Fehlerbild C': fehlerbild_c,
-        'Fehlerbild D': fehlerbild_d,
-        'Fehlerbild E': fehlerbild_e,
-        'Fehlerbild F': fehlerbild_f,
-        'FZG / Motorentyp': motorentyp,
-        'Verbaukontakt': verbautakt,
-        'Tagesbedarf': tagesbedarf,
-        'Abteilung BMW': abteilung_bmw,
-        'Ansprechpartner BBW': ansprechpartner_bbw,
-        'Ansprechpartner Kunde': ansprechpartner_kunde,
-        'Sortier-/Prüfort': pruefort,
-        'Arbeitsort(e)': arbeitsorte,
-        'Sortierregel': sortierregel,
-        'Markierung gemäß Vorgabe': io_markierung,
-        'Persönliche Schutzausrüstung (z.B. Brille, Handschuhe)': psa,
-        'Handschuhe': handschuhe,
-        'Zusätzliche Standards': zusaetzliche_standards,
-        'COP-relevant': cop,
-        'ESD-relevant': esd,
-        'TecSa-relevant': tecsa,
-        'Prüfablauf': pruefablauf
+        # Page 1
+        "Sortierstart": str(sortierstart),
+        "AuftragsID BBW1": auftrag_bbw,
+        "AuftragsID BMW1": auftrag_bmw,
+        "Kritischster BI": str(kritischster_bi),
+        "Tätigkeit": taetigkeit,
+        "Lieferant": lieferant,
+        "Fehlerbild A": fehlerbild_a,
+        "Fehlerbild B": fehlerbild_b,
+        "Fehlerbild C": fehlerbild_c,
+        "Fehlerbild D": fehlerbild_d,
+        "Fehlerbild E": fehlerbild_e,
+        "Fehlerbild F": fehlerbild_f,
+        "FZG  Motorentyp": motorentyp,
+        "Verbautakt": verbautakt,
+        "Tagesbedarf": tagesbedarf,
+        "Abteilung BMW": abteilung_bmw,
+        "Ansprechpartner BBW": ansprechpartner_bbw,
+        "Ansprechpartner Kunde": ansprechpartner_kunde,
+        "SortierPrüfort": pruefort,
+        "Arbeitsorte": arbeitsorte,
+        "Sortierregel": sortierregel,
+        "IO Markierung": io_markierung,
+        "PSA": psa,
+        "Handschuhe": handschuhe,
+        "Zusätzliche Standards": zusaetzliche_standards,
+        "COP": cop,
+        "Prüfablauf": pruefablauf,
+        "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
+
+        # Page 3–6 (NIO, Prüfmittel, Prüfablauf, IO-Markierung)
+        "NIO-Bauteil3": "—",
+        "Hilfsmittel4": "—",
+        "Prüfablauf5": pruefablauf,
+        "IO-Markierung6": io_markierung,
+
+        "Abteilung BMW3": abteilung_bmw,
+        "Ansprechpartner Kunde3": ansprechpartner_kunde,
+        "AAW erstellt von3": "Dein Name",
+
+        "Abteilung BMW4": abteilung_bmw,
+        "Ansprechpartner Kunde4": ansprechpartner_kunde,
+        "AAW erstellt von4": "Dein Name",
+
+        "Abteilung BMW5": abteilung_bmw,
+        "Ansprechpartner Kunde5": ansprechpartner_kunde,
+        "AAW erstellt von5": "Dein Name",
+
+        "Abteilung BMW6": abteilung_bmw,
+        "Ansprechpartner Kunde6": ansprechpartner_kunde,
+        "AAW erstellt von6": "Dein Name",
+
+        # Page 7: Nachweis Freigabe
+        "Freigabe Formel I": freigabe_bmw,
+        "Zusatz": zusatz_qcat,
+        "AA1": anweisungen,
+
+        # Page 8: Materialdaten (first row only)
+        "7453411 17": cleaned_df.iloc[0]["Materialnummer"] if not cleaned_df.empty else "",
+        "Text44": cleaned_df.iloc[0]["Materialbezeichnung"] if not cleaned_df.empty else "",
+        "Text45": cleaned_df.iloc[0]["Lieferant"] if not cleaned_df.empty else "",
+        "Text46": cleaned_df.iloc[0]["Fehlerort"] if not cleaned_df.empty else "",
+        "Text47": cleaned_df.iloc[0]["Fehlerart"] if not cleaned_df.empty else "",
+        "Text48": cleaned_df.iloc[0]["BI"] if not cleaned_df.empty else "",
     }
 
-    filled_filename = f"filled_{auftrag_bmw}.pdf"
-
-    # Call your updated PDF filling function
-    
     image_fields = {
-    "Bauteilbild_box": bild1  # this assumes 'bild' is your file_uploader input earlier
+        "Bauteilbild_box": bild1,
+        "Bauteilbild2": bild1,
     }
 
-    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
+    # Output in memory (no saving to disk)
+    pdf_output = BytesIO()
+    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", pdf_output, data, image_fields)
 
+    st.download_button(
+        label="📥 PDF herunterladen",
+        data=pdf_output.getvalue(),
+        file_name=f"Arbeitsanweisung_{auftrag_bmw}.pdf",
+        mime="application/pdf"
+    )
+
+    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF generiert!")
 
     
-    # Create a download button for the filled PDF
-    with open(filled_filename, "rb") as file:
-        st.download_button(
-            label="📥 PDF herunterladen",
-            data=file,
-            file_name=filled_filename,
-            mime="application/pdf"
-        )
 
-    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
-    
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
