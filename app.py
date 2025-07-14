@@ -190,6 +190,20 @@ for i in range(num_io_markierung):
 
 
 
+# 🔄 Dynamisch hochgeladene Bilder aus render_block() einsammeln
+uploaded_bauteilbilder = []
+
+for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+    for i in range(10):  # max 10 Einträge je Typ
+        key = f"img_{typ}_{i}"
+        if key in st.session_state and st.session_state[key] is not None:
+            uploaded_bauteilbilder.append(st.session_state[key])
+
+
+
+
+
+
 
 
 # --- Seite 3:Nachweis Freigabe Section---
@@ -270,7 +284,8 @@ else:
 
 
 
-def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None):
+def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None, extra_images=None):
+
     import fitz  # PyMuPDF
     from PIL import Image
     import io
