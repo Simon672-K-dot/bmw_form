@@ -262,6 +262,8 @@ edited_df = st.data_editor(
 # 🧹 Filter rows where "🗑️ Löschen?" is not checked (False or NaN)
 if not edited_df.empty:
     cleaned_df = edited_df[(edited_df["🗑️ Löschen?"] != True) | (edited_df["🗑️ Löschen?"].isna())]
+else:
+    cleaned_df = pd.DataFrame(columns=columns)
 
 
 
