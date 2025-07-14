@@ -135,11 +135,13 @@ st.set_page_config(page_title="Bauteil Dokumentation", layout="wide")
 st.markdown("## 📋 Auswahl der Bauteile zur Dokumentation")
 
 # --- Anzahl je Bauteiltyp ---
-num_serien = st.number_input("📦 Serienbehälter", min_value=0, max_value=10, value=0)
-num_io = st.number_input("✅ I.O.-Bauteil", min_value=0, max_value=10, value=0)
-num_nio = st.number_input("❌ N.I.O.-Bauteil", min_value=0, max_value=10, value=0)
-num_markierung = st.number_input("🖊️ I.O.-Markierung", min_value=0, max_value=10, value=0)
-num_freigabezettel = st.number_input("📑 Freigabezettel", min_value=0, max_value=10, value=0)
+
+num_bauteilbild = st.number_input("📸 Bauteilbild", min_value=0, max_value=10, value=0)
+num_nio = st.number_input("❌ NIO-Bauteil", min_value=0, max_value=10, value=0)
+num_hilfsmittel = st.number_input("🔧 Prüf-/Hilfsmittel", min_value=0, max_value=10, value=0)
+num_pruefablauf = st.number_input("📋 Allgemeiner Prüfablauf", min_value=0, max_value=10, value=0)
+num_io_markierung = st.number_input("🖊️ IO-Markierung", min_value=0, max_value=10, value=0)
+
 
 st.markdown("---")
 
@@ -170,24 +172,20 @@ def render_block(typ, index):
     st.markdown("---")
 
 # --- Serienbehälter Blöcke ---
-for i in range(num_serien):
-    render_block("📦 Serienbehälter", i)
+for i in range(num_bauteilbild):
+    render_block("Bauteilbild", i)
 
-# --- I.O.-Bauteil Blöcke ---
-for i in range(num_io):
-    render_block("✅ I.O.-Bauteil", i)
-
-# --- N.I.O.-Bauteil Blöcke ---
 for i in range(num_nio):
-    render_block("❌ N.I.O.-Bauteil", i)
+    render_block("NIO-Bauteil", i)
 
-# --- I.O.-Markierung Blöcke ---
-for i in range(num_markierung):
-    render_block("🖊️ I.O.-Markierung", i)
+for i in range(num_hilfsmittel):
+    render_block("Prüf-/Hilfsmittel", i)
 
-# --- Freigabezettel Blöcke ---
-for i in range(num_freigabezettel):
-    render_block("📑 Freigabezettel", i)
+for i in range(num_pruefablauf):
+    render_block("Allgemeiner Prüfablauf", i)
+
+for i in range(num_io_markierung):
+    render_block("IO-Markierung", i)
 
 
 
