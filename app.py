@@ -381,13 +381,22 @@ if st.button("✅ Formular abgeben"):
         "Zusatz": zusatz_qcat,
         "AA1": anweisungen,
 
-        # Page 8: Materialdaten (first row only)
-        "7453411 17": cleaned_df.iloc[0]["Materialnummer"] if not cleaned_df.empty else "",
-        "Text44": cleaned_df.iloc[0]["Materialbezeichnung"] if not cleaned_df.empty else "",
-        "Text45": cleaned_df.iloc[0]["Lieferant"] if not cleaned_df.empty else "",
-        "Text46": cleaned_df.iloc[0]["Fehlerort"] if not cleaned_df.empty else "",
-        "Text47": cleaned_df.iloc[0]["Fehlerart"] if not cleaned_df.empty else "",
-        "Text48": cleaned_df.iloc[0]["BI"] if not cleaned_df.empty else "",
+        # Page 8: Materialdaten rows:1-2
+               
+        "Materialnummer1": cleaned_df.iloc[0]["Materialnummer"] if len(cleaned_df) > 0 else "",
+        "Materialbezeichnung1": cleaned_df.iloc[0]["Materialbezeichnung"] if len(cleaned_df) > 0 else "",
+        "Lieferant1": cleaned_df.iloc[0]["Lieferant"] if len(cleaned_df) > 0 else "",
+        "Fehlort1": cleaned_df.iloc[0]["Fehlerort"] if len(cleaned_df) > 0 else "",
+        "Fehlart1": cleaned_df.iloc[0]["Fehlerart"] if len(cleaned_df) > 0 else "",
+        "BI_1": cleaned_df.iloc[0]["BI"] if len(cleaned_df) > 0 else "",
+
+        "Materialnummer2": cleaned_df.iloc[1]["Materialnummer"] if len(cleaned_df) > 1 else "",
+        "Materialbezeichnung2": cleaned_df.iloc[1]["Materialbezeichnung"] if len(cleaned_df) > 1 else "",
+        "Lieferant2": cleaned_df.iloc[1]["Lieferant"] if len(cleaned_df) > 1 else "",
+        "Fehlort2": cleaned_df.iloc[1]["Fehlerort"] if len(cleaned_df) > 1 else "",
+        "Fehlart2": cleaned_df.iloc[1]["Fehlerart"] if len(cleaned_df) > 1 else "",
+        "BI_2": cleaned_df.iloc[1]["BI"] if len(cleaned_df) > 1 else "",
+
     }
 
     image_fields = {
