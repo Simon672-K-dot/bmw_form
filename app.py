@@ -428,7 +428,7 @@ bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
 
 
 
-def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None):
+def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None,extra_images=None):
     import fitz  # PyMuPDF
     from PIL import Image
     import io
@@ -534,12 +534,27 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
 
+if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
+    from PyPDF2 import PdfReader
+
+    pdf_path = "bbw_template_fillable.pdf"  # Adjust if your path is different
+    reader = PdfReader(pdf_path)
+    fields = reader.get_fields()
+
+    st.markdown("### 🧾 Gefundene Formularfelder:")
+    if fields:
+        for name in fields:
+            st.write(f"Field name: '{name}'")
+    else:
+        st.warning("⚠️ Keine Formularfelder gefunden.")
+
+
 
 
 if st.button("✅ Formular abgeben"):
     data = {
         'Sortierstart': str(sortierstart),
-        'Auftrags-ID BBW': auftrag_bbw,
+        'AuftragsID BBW': auftrag_bbw,
         'AuftragsID BMW': auftrag_bmw,
         'Kritischster BI': str(kritischster_bi),
         'Prüfumfang': pruefumfang,
@@ -608,7 +623,7 @@ if st.button("✅ Formular abgeben"):
     "Bauteilbild_box": bild1  # this assumes 'bild' is your file_uploader input earlier
     }
 
-    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
+    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields, extra_images =extra_images)
 
 
     
