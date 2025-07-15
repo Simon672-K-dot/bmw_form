@@ -299,9 +299,11 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
         if widgets:
             for widget in widgets:
                 field_name = widget.field_name
-                if field_name in data:
-                    widget.field_value = data[field_name]
+                base_name = ''.join(filter(str.isalpha, field_name))  # removes numbers like "3" or "2"
+                if base_name in data:
+                    widget.field_value = data[base_name]
                     widget.update()
+                
 
     # ✅ Insert images at placeholder fields
     if image_dict:
