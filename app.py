@@ -492,6 +492,16 @@ if st.button("✅ Formular abgeben"):
         "Bauteilbild2": bild1,
     }
 
+
+    # Collect extra images
+    uploaded_bauteilbilder = []
+    for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+        for i in range(10):
+            key = f"img_{typ}_{i}"
+            if key in st.session_state and st.session_state[key] is not None:
+                uploaded_bauteilbilder.append(st.session_state[key])
+
+
     # Output in memory (no saving to disk)
     pdf_output = BytesIO()
     fill_pdf_with_multiple_images(template_path, output_path, data, image_dict, uploaded_bauteilbilder)
