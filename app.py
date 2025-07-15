@@ -505,8 +505,8 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
             # 📌 Gemeinsame Felder
             common_text = (
                 f"📅 Sortierstart: {data.get('Sortierstart', '')}\n"
-                f"🆔 Auftrags-ID BBW: {data.get('Auftrags-ID BBW', '')}\n"
-                f"🆔 Auftrags-ID BMW: {data.get('AuftragsID BMW', '')}\n"
+                f"🆔 AuftragsID BBW: {data.get('Auftrags-ID BBW', '')}\n"
+                f"🆔 AuftragsID BMW: {data.get('AuftragsID BMW', '')}\n"
                 f"📊 Kritischster BI: {data.get('Kritischster BI', '')}\n"
                 f"🏢 Abteilung BMW: {abteilung}\n"
                 f"👤 Ansprechpartner Kunde: {ansprechpartner}\n"
