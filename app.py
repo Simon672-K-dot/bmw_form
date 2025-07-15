@@ -568,6 +568,36 @@ if st.button("✅ Formular abgeben"):
     }
 
     filled_filename = f"filled_{auftrag_bmw}.pdf"
+    
+        # Map Bauteil types to their corresponding number variable names
+    typ_map = {
+        "📦 Serienbehälter": num_serien,
+        "✅ I.O.-Bauteil": num_io,
+        "❌ N.I.O.-Bauteil": num_nio,
+        "🖊️ I.O.-Markierung": num_markierung,
+        "📑 Freigabezettel": num_freigabezettel
+    }
+    
+    extra_images = []
+    for typ, count in typ_map.items():
+        for i in range(count):
+            img_key = f"img_{typ}_{i}"
+            if img_key in st.session_state:
+                image = st.session_state[img_key]
+                if image:
+                    block = {
+                        "image": image,
+                        "pruefumfang": st.session_state.get(f"pruefumfang_{typ}_{i}", ""),
+                        "kommentar": st.session_state.get(f"kommentar_{typ}_{i}", ""),
+                        "abteilung": st.session_state.get(f"abteilung_{typ}_{i}", abteilung_bmw),
+                        "ansprechpartner": st.session_state.get(f"ansprechpartner_{typ}_{i}", ansprechpartner_kunde),
+                        "erstellt_von": st.session_state.get(f"erstellt_von_{typ}_{i}", "Dein Name"),
+                    }
+                    extra_images.append(block)
+    
+    
+
+    
 
     # Call your updated PDF filling function
     
