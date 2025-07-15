@@ -281,7 +281,35 @@ else:
 
 
 
+extra_images = []
+
+for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+    for i in range(10):  # Match the max number you allow per block
+        image = st.session_state.get(f"img_{typ}_{i}")
+        kommentar = st.session_state.get(f"kommentar_{typ}_{i}", "")
+        pruefumfang = st.session_state.get(f"pruefumfang_{typ}_{i}", "")
+        abteilung = st.session_state.get(f"abteilung_{typ}_{i}", "")
+        ansprechpartner = st.session_state.get(f"ansprechpartner_{typ}_{i}", "")
+        erstellt_von = st.session_state.get(f"erstellt_von_{typ}_{i}", "")
+
+        if image:  # Only add if there's an uploaded image
+            extra_images.append({
+                "image": image,
+                "kommentar": kommentar,
+                "pruefumfang": pruefumfang,
+                "abteilung": abteilung,
+                "ansprechpartner": ansprechpartner,
+                "erstellt_von": erstellt_von
+            })
+
+
+
+
+
+
+
 #FUNCTION 
+
 
 
 
@@ -466,7 +494,8 @@ if st.button("✅ Formular abgeben"):
 
     # Output in memory (no saving to disk)
     pdf_output = BytesIO()
-    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", pdf_output, data, image_fields)
+    fill_pdf_with_multiple_images(template_path, output_path, data, image_dict, uploaded_bauteilbilder)
+
 
     st.download_button(
         label="📥 PDF herunterladen",
