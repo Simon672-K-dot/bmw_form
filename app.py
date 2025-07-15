@@ -534,20 +534,29 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
 # --- FINAL SUBMIT BUTTON ---
 from io import BytesIO
 
+st.markdown("---")
+st.markdown("### 🔍 PDF-Felder anzeigen (Debug Tool)")
+
 if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
     from PyPDF2 import PdfReader
+    import os
 
-    pdf_path = "bbw_template_fillable.pdf"  # Adjust if your path is different
-    reader = PdfReader(pdf_path)
-    fields = reader.get_fields()
+    pdf_path = "bbw_template_fillable.pdf"
+    st.write("📁 Dateipfad:", pdf_path)
+    st.write("🧪 Datei existiert:", os.path.exists(pdf_path))
 
-    st.markdown("### 🧾 Gefundene Formularfelder:")
-    if fields:
-        for name in fields:
-            st.write(f"Field name: '{name}'")
-    else:
-        st.warning("⚠️ Keine Formularfelder gefunden.")
+    try:
+        reader = PdfReader(pdf_path)
+        fields = reader.get_fields()
 
+        st.markdown("### 🧾 Gefundene Formularfelder:")
+        if fields:
+            for name in fields:
+                st.write(f"Field name: '{name}'")
+        else:
+            st.warning("⚠️ Keine Formularfelder gefunden.")
+    except Exception as e:
+        st.error(f"❌ Fehler beim Lesen der PDF: {e}")
 
 
 
@@ -640,19 +649,6 @@ if st.button("✅ Formular abgeben"):
     
 
 
-if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
-    from PyPDF2 import PdfReader
-
-    pdf_path = "bbw_template_fillable.pdf"
-    reader = PdfReader(pdf_path)
-    fields = reader.get_fields()
-
-    st.markdown("### 🧾 Gefundene Formularfelder:")
-    if fields:
-        for name in fields:
-            st.write(f"Field name: '{name}'")
-    else:
-        st.warning("⚠️ Keine Formularfelder gefunden.")
 
 
 
