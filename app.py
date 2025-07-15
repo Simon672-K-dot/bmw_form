@@ -465,64 +465,67 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
                             break
 
     # ➕ Neue Seiten für Bauteildokumentation-Abschnitt
-if extra_images:
-    for block in extra_images:
-        img_file = block.get("image")
-        pruefumfang = block.get("pruefumfang", "")
-        kommentar = block.get("kommentar", "")
-        abteilung = block.get("abteilung", "")
-        ansprechpartner = block.get("ansprechpartner", "")
-        erstellt_von = block.get("erstellt_von", "")
+    if extra_images:
+        for block in extra_images:
+            img_file = block.get("image")
+            pruefumfang = block.get("pruefumfang", "")
+            kommentar = block.get("kommentar", "")
+            abteilung = block.get("abteilung", "")
+            ansprechpartner = block.get("ansprechpartner", "")
+            erstellt_von = block.get("erstellt_von", "")
+    
+            # Bild umwandeln
+            img = Image.open(img_file).convert("RGB")
+            img_byte_arr = io.BytesIO()
+            img.save(img_byte_arr, format="PNG")
+            img_stream = img_byte_arr.getvalue()
+    
+            # Neue Seite erzeugen
+            page = doc.new_page(width=595, height=842)  # A4
+    
+            # 📸 Bild einfügen
+            page.insert_image(fitz.Rect(50, 200, 545, 650), stream=img_stream)
+    
+            # 🧾 Prüfumfang
+            page.insert_textbox(
+                fitz.Rect(50, 160, 545, 185),
+                f"📋 Prüfumfang:\n{pruefumfang}",
+                fontsize=10,
+                fontname="helv"
+            )
+    
+            # 💬 Kommentar
+            page.insert_textbox(
+                fitz.Rect(50, 655, 545, 700),
+                f"💬 Kommentar:\n{kommentar}",
+                fontsize=10,
+                fontname="helv"
+            )
+    
+            # 📌 Gemeinsame Felder
+            common_text = (
+                f"📅 Sortierstart: {data.get('Sortierstart', '')}\n"
+                f"🆔 Auftrags-ID BBW: {data.get('Auftrags-ID BBW', '')}\n"
+                f"🆔 Auftrags-ID BMW: {data.get('AuftragsID BMW', '')}\n"
+                f"📊 Kritischster BI: {data.get('Kritischster BI', '')}\n"
+                f"🏢 Abteilung BMW: {abteilung}\n"
+                f"👤 Ansprechpartner Kunde: {ansprechpartner}\n"
+                f"🖊️ AAW erstellt von: {erstellt_von}"
+            )
+            
+                    
 
-        # Bild umwandeln
-        img = Image.open(img_file).convert("RGB")
-        img_byte_arr = io.BytesIO()
-        img.save(img_byte_arr, format="PNG")
-        img_stream = img_byte_arr.getvalue()
+    
+            page.insert_textbox(
+                fitz.Rect(50, 705, 545, 800),
+                common_text,
+                fontsize=10,
+                fontname="helv"
+            )
 
-        # Neue Seite erzeugen
-        page = doc.new_page(width=595, height=842)  # A4
-
-        # 📸 Bild einfügen
-        page.insert_image(fitz.Rect(50, 200, 545, 650), stream=img_stream)
-
-        # 🧾 Prüfumfang
-        page.insert_textbox(
-            fitz.Rect(50, 160, 545, 185),
-            f"📋 Prüfumfang:\n{pruefumfang}",
-            fontsize=10,
-            fontname="helv"
-        )
-
-        # 💬 Kommentar
-        page.insert_textbox(
-            fitz.Rect(50, 655, 545, 700),
-            f"💬 Kommentar:\n{kommentar}",
-            fontsize=10,
-            fontname="helv"
-        )
-
-        # 📌 Gemeinsame Felder
-        common_text = (
-            f"📅 Sortierstart: {data.get('Sortierstart', '')}\n"
-            f"🆔 Auftrags-ID BBW: {data.get('AuftragsIDBBW1', '')}\n"
-            f"🆔 Auftrags-ID BMW: {data.get('AuftragsIDBMW1', '')}\n"
-            f"📊 Kritischster BI: {data.get('KritischsterBI', '')}\n"
-            f"🏢 Abteilung BMW: {abteilung}\n"
-            f"👤 Ansprechpartner Kunde: {ansprechpartner}\n"
-            f"🖊️ AAW erstellt von: {erstellt_von}"
-        )
-
-        page.insert_textbox(
-            fitz.Rect(50, 705, 545, 800),
-            common_text,
-            fontsize=10,
-            fontname="helv"
-        )
-
-# 💾 Save final output
-doc.save(output_path)
-doc.close()
+    # 💾 Save final output
+    doc.save(output_path)
+    doc.close()
 
 
 
