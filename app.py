@@ -409,7 +409,6 @@ if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
 
 
 
-
 if st.button("✅ Formular abgeben"):
     data = {
         # Page 1
@@ -521,6 +520,9 @@ if st.button("✅ Formular abgeben"):
             key = f"img_{typ}_{i}"
             if key in st.session_state and st.session_state[key] is not None:
                 uploaded_bauteilbilder.append(st.session_state[key])
+
+
+    st.write("DEBUG – pruefumfang:", pruefumfang)
 
 
     # Output in memory (no saving to disk)
