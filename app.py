@@ -417,6 +417,7 @@ if st.button("✅ Formular abgeben"):
         "AuftragsID BBW1": auftrag_bbw,
         "AuftragsID BMW1": auftrag_bmw,
         "Kritischster BI": str(kritischster_bi),
+        "Prüfumfang": pruefumfang,
         "Tätigkeit": taetigkeit,
         "Lieferant": lieferant,
         "Fehlerbild A": fehlerbild_a,
