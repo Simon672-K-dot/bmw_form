@@ -537,6 +537,17 @@ if st.button("✅ Formular abgeben"):
 
     st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF generiert!")
 
+
+
+
+
+from PyPDF2 import PdfReader
+reader = PdfReader("bbw_template_fillable.pdf")
+fields = reader.get_fields()
+for name in fields:
+    print(name)
+
+
     
 
 
