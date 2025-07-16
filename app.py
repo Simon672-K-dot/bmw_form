@@ -487,10 +487,15 @@ if st.button("✅ Formular abgeben"):
 
     }
 
-    image_fields = {
-        "Bauteilbild_box": bild1,
-        "Bauteilbild2": bild1,
-    }
+        # Dynamisch erzeugtes image_fields Dictionary für spezifisches Mapping
+    image_fields = {}
+    
+    field_counter = 2  # Start bei 2, weil "Bauteilbild2" die erste ist
+    for i, img in enumerate(uploaded_bauteilbilder):
+        image_fields[f"Bauteilbild{field_counter}"] = img
+        field_counter += 1
+    
+        
 
 
     # Collect extra images
@@ -504,7 +509,8 @@ if st.button("✅ Formular abgeben"):
 
     # Output in memory (no saving to disk)
     pdf_output = BytesIO()
-    fill_pdf_with_multiple_images(template_path, output_path, data, image_dict, uploaded_bauteilbilder)
+    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", pdf_output, data, image_fields, extra_images)
+
 
 
     st.download_button(
