@@ -327,10 +327,10 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
         if widgets:
             for widget in widgets:
                 field_name = widget.field_name
-                base_name = ''.join(filter(str.isalpha, field_name))  # removes numbers like "3" or "2"
-                if base_name in data:
-                    widget.field_value = data[base_name]
+                if field_name in data:
+                    widget.field_value = data[field_name]
                     widget.update()
+
                 
 
     # ✅ Insert images at placeholder fields
@@ -486,6 +486,21 @@ if st.button("✅ Formular abgeben"):
         "BI_2": cleaned_df.iloc[1]["BI"] if len(cleaned_df) > 1 else "",
 
     }
+
+
+
+
+        # 🔁 Repeat shared fields across sections
+    for i in range(2, 7):  # Pages 2–6
+        data[f"Sortierstart{i}"] = str(sortierstart)
+        data[f"AuftragsID BBW{i}"] = auftrag_bbw
+        data[f"AuftragsID BMW{i}"] = auftrag_bmw
+        data[f"Kritischster BI{i}"] = str(kritischster_bi)
+        data[f"Prüfumfang{i}"] = pruefumfang
+        data[f"Abteilung BMW{i}"] = abteilung_bmw
+        data[f"Ansprechpartner Kunde{i}"] = ansprechpartner_kunde
+        data[f"AAW erstellt von{i}"] = "Dein Name"
+    
 
         # Dynamisch erzeugtes image_fields Dictionary für spezifisches Mapping
     image_fields = {}
