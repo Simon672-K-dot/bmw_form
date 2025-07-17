@@ -417,7 +417,8 @@ if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
                 st.write(f"Field name: '{name}'")
         else:
             st.warning("⚠️ Keine Formularfelder gefunden.")
-    except Exception as ecop_text_lines = []
+    except Exception as e:
+         st.warning(f"⚠️ Fehler beim Auslesen der Felder: {e}")
 
 
 
