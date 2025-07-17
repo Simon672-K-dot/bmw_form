@@ -127,21 +127,9 @@ for schild in ausgewaehlte_bilder:
 
 # --- NEUE SEITE ---
 
-import streamlit as st
-from datetime import date
 
-st.set_page_config(page_title="Bauteil Dokumentation", layout="wide")
 
-st.markdown("### 🔧 Gemeinsame Angaben für alle Dokumentationsblöcke")
 
-col_meta1, col_meta2, col_meta3 = st.columns(3)
-
-with col_meta1:
-    abteilung_bmw = st.text_input("🏢 Abteilung BMW")
-with col_meta2:
-    ansprechpartner_kunde = st.text_input("👤 Ansprechpartner Kunde")
-with col_meta3:
-    erstellt_von = st.text_input("🖊️ AAW erstellt von", value="Dein Name")
 
 
 st.markdown("## 📋 Auswahl der Bauteile zur Dokumentation")
@@ -288,25 +276,7 @@ else:
 
 
 
-extra_images = []
 
-for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
-    for i in range(10):  # Match the max number you allow per block
-        image = st.session_state.get(f"img_{typ}_{i}")
-        kommentar = st.session_state.get(f"kommentar_{typ}_{i}", "")
-        st.text_input("🏢 Abteilung BMW", value=abteilung_bmw, disabled=True)
-        st.text_input("👤 Ansprechpartner Kunde", value=ansprechpartner_kunde, disabled=True)
-        st.text_input("🖊️ AAW erstellt von", value=erstellt_von, disabled=True)
-
-
-        if image:  # Only add if there's an uploaded image
-            extra_images.append({
-                "image": image,
-                "kommentar": kommentar,
-                "abteilung": abteilung,
-                "ansprechpartner": ansprechpartner,
-                "erstellt_von": erstellt_von
-            })
 
 
 
