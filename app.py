@@ -76,27 +76,20 @@ with col3:
 st.markdown("---")
 
 # --- I.O. Markierung & PSA Bereich ---
-st.markdown('<h3 style="background-color:#dff0d8;padding:10px;">✅ I.O. Markierung</h3>', unsafe_allow_html=True)
+st.markdown('<h3 style="background-color:#dff0d8;padding:10px;">✅  Markierung</h3>', unsafe_allow_html=True)
 io_markierung = st.text_input("Markierung gemäß Vorgabe")
 
+
+
+
+
+
+
+
+
 st.markdown('<h3 style="background-color:#d9edf7;padding:10px;">🧤 PSA</h3>', unsafe_allow_html=True)
-psa = st.text_input("Persönliche Schutzausrüstung (z.B. Brille, Handschuhe)")
-handschuhe = st.text_input("Handschuhe")
-zusaetzliche_standards = st.text_input("Zusätzliche Standards")
 
-# --- COP / ESD / Prüfablauf + Bild nebeneinander ---
-st.markdown('<h3 style="background-color:#fcf8e3;padding:10px;">⚙️ COP / ESD / Prüfablauf</h3>', unsafe_allow_html=True)
-col_a, col_b, col_c = st.columns([1,1,1])
-with col_a:
-    cop = st.selectbox("COP-relevant", ["Ja", "Nein"])
-    esd = st.selectbox("ESD-relevant", ["Ja", "Nein"])
-    tecsa = st.selectbox("TecSa-relevant", ["Ja", "Nein"])
-with col_b:
-    pruefablauf = st.text_area("📋 Prüfablauf")
-with col_c:
-    bild1 = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"], key="bild1")
-
-# --- Gebotsschilder ---
+# --- PSA Symbol Selection Block ---
 st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- und Warnschilder (Bilderauswahl)</h3>', unsafe_allow_html=True)
 
 col_b1, col_b2, col_b3, col_b4 = st.columns(4)
@@ -104,10 +97,14 @@ col_b1, col_b2, col_b3, col_b4 = st.columns(4)
 with col_b1:
     st.image("images/fusschutz.jpg", width=100)
     fusschutz_selected = st.checkbox("Fußschutz")
+    st.image("images/helm1.png", width=100)
+    helm_selected = st.checkbox("Helm")
 
 with col_b2:
     st.image("images/warnweste.jpg", width=100)
     warnweste_selected = st.checkbox("Warnweste")
+    st.image("images/Handschuhe.png", width=100)
+    handschuhe_selected = st.checkbox("Handschuhe")
 
 with col_b3:
     st.image("images/fußgaenger.jpg", width=100)
@@ -117,20 +114,47 @@ with col_b4:
     st.image("images/augenschutz.jpg", width=100)
     augenschutz_selected = st.checkbox("Augenschutz")
 
+# Collect selected image labels
 ausgewaehlte_bilder = []
 if fusschutz_selected:
     ausgewaehlte_bilder.append("Fußschutz")
+if helm_selected:
+    ausgewaehlte_bilder.append("Helm")
 if warnweste_selected:
     ausgewaehlte_bilder.append("Warnweste")
+if handschuhe_selected:
+    ausgewaehlte_bilder.append("Handschuhe")
 if fussweg_selected:
     ausgewaehlte_bilder.append("Fußgängerweg")
 if augenschutz_selected:
     ausgewaehlte_bilder.append("Augenschutz")
 
+# Show selection
 st.markdown("**Ausgewählte Schilder:**")
-
 for schild in ausgewaehlte_bilder:
     st.markdown(f"- ✅ {schild}")
+
+
+
+# Headline: Markierung (green)
+st.markdown('<h3 style="background-color:#dff0d8;padding:10px;">✅ Markierung</h3>', unsafe_allow_html=True)
+markierung = st.text_input("Markierung gemäß Vorgabe")
+
+# Headline: Beschreibung / Prüfablauf (orange)
+st.markdown('<h3 style="background-color:#ffe5b4;padding:10px;">📝 Beschreibung / Prüfablauf</h3>', unsafe_allow_html=True)
+beschreibung_pruefablauf = st.text_area("Prüfablauf Beschreibung")
+
+# Headline: Zusätzliche Informationen (red)
+st.markdown('<h3 style="background-color:#f2dede;padding:10px;">📌 Zusätzliche Informationen</h3>', unsafe_allow_html=True)
+col_left, col_right = st.columns([2, 1])
+
+with col_left:
+    zusaetzliche_infos = st.text_area("Zusätzliche Angaben")
+
+with col_right:
+    cop_relevant = st.selectbox("COP-Relevant", ["Ja", "Nein"])
+    esd_relevant = st.selectbox("ESD-Relevant", ["Ja", "Nein"])
+    tecsa_relevant = st.selectbox("TecSa-Relevant", ["Ja", "Nein"])
 
 
 
