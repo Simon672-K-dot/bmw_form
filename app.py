@@ -161,11 +161,10 @@ else:
 
 
 
+#Bild feld für Bild 1
 
-
-
-# --- NEUE SEITE ---
-
+st.markdown('<h3 style="background-color:#e1f5fe;padding:10px;">📸 Bauteilbild</h3>', unsafe_allow_html=True)
+bauteilbild = st.file_uploader("Bild des Bauteils hochladen", type=["png", "jpg", "jpeg"], key="bauteilbild1")
 
 
 
