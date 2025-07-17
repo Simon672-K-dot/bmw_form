@@ -75,15 +75,10 @@ with col3:
 
 st.markdown("---")
 
-# --- I.O. Markierung & PSA Bereich ---
-st.markdown('<h3 style="background-color:#dff0d8;padding:10px;">✅  Markierung</h3>', unsafe_allow_html=True)
-io_markierung = st.text_input("Markierung gemäß Vorgabe")
 
 
 
-
-
-
+# ---  Markierung & PSA Bereich ---
 
 
 
