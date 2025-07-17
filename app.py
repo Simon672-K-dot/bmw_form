@@ -477,8 +477,9 @@ if st.button("✅ Formular abgeben"):
         "Koordinator": Koordinator,
     
         "Markierung": markierung,
-        "PSA": psa,
+        "PSA": ", ".join(ausgewaehlte_bilder), 
         "Cop": cop_field_value,
+        "Zusätzliche Infos": zusaetzliche_infos
     
         "Prüfablauf": beschreibung_pruefablauf
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
