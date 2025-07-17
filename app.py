@@ -27,7 +27,7 @@ st.markdown("### 📌 Freigabe")
 col_freigabe, col_ids1, col_ids2, col_ids3 = st.columns(4)
 
 with col_freigabe:
-    freigabe = st.text_input("✅ Rev/Freigabe")
+    freigabe_bmw = st.text_input("✅ Rev/Freigabe")
 
 with col_ids1:
     auftrags_id = st.text_input("🧾 Auftrags-ID")
@@ -400,10 +400,10 @@ if st.button("✅ Formular abgeben"):
         # ✅ First Section (Pages 1–2)
         "Freigabe": freigabe_bmw,
         "Sortierstart": str(sortierstart),
-        "Auftrags-ID": auftrag_bbw,
-        "Auftrag": pruefumfang,
-        "BI": str(kritischster_bi),
-        "VorgangsNr": auftrag_bmw,
+        "Auftrags-ID": auftrags_id,
+        "Auftrag": auftrag,
+        "BI": str(bi),
+        "VorgangsNr": vorgangs_nr,
     
         "Tätigkeit": taetigkeit,
         "Lieferant": lieferant,
@@ -414,15 +414,16 @@ if st.button("✅ Formular abgeben"):
         "Fehlerbild E": fehlerbild_e,
         "Fehlerbild F": fehlerbild_f,
         "FZG / Motorentyp": motorentyp,
-        "KST": verbautakt,
+        "KST": kst,
         "Tagesbedarf": tagesbedarf,
     
-        "Abteilung": abteilung_bmw,
-        "Auftraggeber": ansprechpartner_bbw,
+        "Abteilung": abteilung,
+        "Auftraggeber": Auftraggeber,
         "Ansprechpartner Kunde": ansprechpartner_kunde,
         "Prüfort Werk": pruefort,
         "Arbeitsort(e)": arbeitsorte,
         "Sortierregel": sortierregel,
+        "Koordinator": Koordinator,
     
         "Markierung": handschuhe,
         "PSA": psa,
