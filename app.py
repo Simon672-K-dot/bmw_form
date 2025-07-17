@@ -46,8 +46,6 @@ st.markdown('<h3 style="background-color:#e8e8e8;padding:10px;">📋 Prüf- & Te
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    auftrag = st.text_input("📄 Auftrag")
-    taetigkeit = st.text_input("🛠️ Tätigkeit")
     fehlerbild_a = st.text_input("❌ Fehlerbild A")
     fehlerbild_b = st.text_input("❌ Fehlerbild B")
     fehlerbild_c = st.text_input("❌ Fehlerbild C")
@@ -56,21 +54,25 @@ with col1:
     fehlerbild_f = st.text_input("❌ Fehlerbild F")
     
 with col2:
+    auftrag = st.text_input("📄 Auftrag")
     lieferant = st.text_input("🚚 Lieferant")
     kst = st.text_input("⚙️ KST")
     tagesbedarf = st.text_input("📦 Tagesbedarf")
     ansprechpartner_kunde = st.text_input("👤 Ansprechpartner Kunde")
     arbeitsorte = st.text_input("📍 Arbeitsort(e)")
     Werk = st.text_input("Prüfort Werk")
+    
 
 with col3:
-
+    taetigkeit = st.text_input("🛠️ Tätigkeit")
     abteilung = st.text_input("🏷️ Abteilung")
     sortierregel = st.text_input("📑 Sortierregel")
     motorentyp = st.text_input("🚗 FZG / Motorentyp")
     Auftraggeber = st.text_input("👷 Auftraggeber")
     pruefort = st.text_input("🏭 Sortier-/Prüfort")
     Koordinator = st.text_input("Koordinator")
+    AAW = st.text_input("AAW erstellt")
+    
 
 
 st.markdown("---")
@@ -189,21 +191,38 @@ st.markdown("---")
 def render_block(typ, index):
     st.markdown(f"<h3 style='background-color:#f0f0f0;padding:10px;'>{typ} {index+1}</h3>", unsafe_allow_html=True)
 
-    st.markdown('<div style="background-color:#e8e8e8;padding:8px;margin-bottom:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
-    st.text_area(f"Prüfumfang {typ} {index+1}", key=f"pruefumfang_{typ}_{index}")
-
     col_img, col_kommentar = st.columns([2, 1])
+
     with col_img:
-        bild = st.file_uploader(f"📸 Bild für {typ} {index+1}", type=["jpg", "jpeg", "png"], key=f"img_{typ}_{index}")
+        bild = st.file_uploader(
+            f"📸 Bild für {typ} {index+1}",
+            type=["jpg", "jpeg", "png"],
+            key=f"img_{typ}_{index}"
+        )
         if bild:
             st.image(bild, use_container_width=True)
 
-
     with col_kommentar:
-        st.text_area("💬 Kommentar", height=200, key=f"kommentar_{typ}_{index}")
+        st.text_area(
+            "💬 Kommentar",
+            height=200,
+            key=f"kommentar_{typ}_{index}"
+        )
 
-    
     st.markdown("---")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # --- Serienbehälter Blöcke ---
 for i in range(num_bauteilbild):
@@ -233,30 +252,6 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Pr�
         if key in st.session_state and st.session_state[key] is not None:
             uploaded_bauteilbilder.append(st.session_state[key])
 
-
-
-
-
-
-
-
-# --- Seite 3:Nachweis Freigabe Section---
-st.markdown('<h2 style="text-align:center; background-color:#e6e6e6; padding:10px;">🧾 Nachweis Freigabe</h2>', unsafe_allow_html=True)
-
-# Row: Freigabe BBW and BMW
-col1, col2 = st.columns(2)
-with col1:
-    freigabe_bbw = st.text_input("✅ Freigabe B.B.W", key="freigabe_bbw")
-with col2:
-    freigabe_bmw = st.text_input("🏁 Freigabe BMW", key="freigabe_bmw")
-
-# Allgemeine Anweisungen (green area)
-st.markdown('<div style="background-color:#dff0d8;padding:10px;"><strong>✅ Allgemeine Anweisungen</strong></div>', unsafe_allow_html=True)
-anweisungen = st.text_area("", height=150, key="allgemeine_anweisungen")
-
-# Zusatz für QCat-gesteuerte Aufträge
-st.markdown('<div style="background-color:#f9f9f9;padding:10px;"><strong>📌 Zusatz für QCat-gesteuerte Aufträge:</strong></div>', unsafe_allow_html=True)
-zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
 
 
 
@@ -394,6 +389,8 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
 
 
 # --- FINAL SUBMIT BUTTON ---
+
+#d bug 
 from io import BytesIO
 
 st.markdown("---")
@@ -475,6 +472,7 @@ if st.button("✅ Formular abgeben"):
         "Arbeitsort(e)": arbeitsorte,
         "Sortierregel": sortierregel,
         "Koordinator": Koordinator,
+        "AAW erstellt":AAW,
     
         "Markierung": markierung,
         "PSA": ", ".join(ausgewaehlte_bilder), 
@@ -507,38 +505,30 @@ if st.button("✅ Formular abgeben"):
 
 
 
-
-
     
-
-        # Dynamisch erzeugtes image_fields Dictionary für spezifisches Mapping
+    #Create image and comment field mapping directly from session state
     image_fields = {}
+    extra_images = []
     
-    field_counter = 2  # Start bei 2, weil "Bauteilbild2" die erste ist
-    for i, img in enumerate(uploaded_bauteilbilder):
-        image_fields[f"Bauteilbild{field_counter}"] = img
-        field_counter += 1
-    
-        
-
-
-    # Collect extra images
-    uploaded_bauteilbilder = []
-    for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+    for typ in ["Bauteilbild", "NIO–Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO–Markierung"]:
         for i in range(10):
-            key = f"img_{typ}_{i}"
-            if key in st.session_state and st.session_state[key] is not None:
-                uploaded_bauteilbilder.append(st.session_state[key])
+            image_key = f"img_{typ}_{i}"
+            comment_key = f"kommentar_{typ}_{i}"
+    
+            if image_key in st.session_state and st.session_state[image_key]:
+                image_fields[f"Bauteilbild{i+2}"] = st.session_state[image_key]
+                image_fields[f"Kommentar{i+2}"] = st.session_state.get(comment_key, "")
 
 
-   
 
-
+                                              
     # Output in memory (no saving to disk)
     pdf_output = BytesIO()
     fill_pdf_with_multiple_images("bbw_template_fillable.pdf", pdf_output, data, image_fields, extra_images)
 
 
+
+    
 
     st.download_button(
         label="📥 PDF herunterladen",
