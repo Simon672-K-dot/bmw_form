@@ -23,15 +23,21 @@ st.write("DEBUG – Sortierstart:", sortierstart)
 # --- Zweite Zeile: Freigabe Überschrift ---
 st.markdown("### 📌 Freigabe")
 
+# Unterhalb von Freigabe: vier Felder nebeneinander
+col_freigabe, col_ids1, col_ids2, col_ids3 = st.columns(4)
 
-# Unterhalb von Freigabe: drei IDs nebeneinander
-col_ids1, col_ids2, col_ids3 = st.columns(3)
+with col_freigabe:
+    freigabe = st.text_input("✅ Rev/Freigabe")
+
 with col_ids1:
-    auftrag_bbw = st.text_input("🧾 Auftrags-ID BBW")
+    auftrags_id = st.text_input("🧾 Auftrags-ID")
+
 with col_ids2:
-    auftrag_bmw = st.text_input("🧾 Auftrags-ID BMW")
+    vorgangs_nr = st.text_input("🧾 VorgangsNr")
+
 with col_ids3:
-    kritischster_bi = st.selectbox("📊 Kritischster BI", list(range(1, 11)))
+    bi = st.selectbox("📊 BI", list(range(1, 8)))
+
 
 st.markdown("---")
 
@@ -40,28 +46,32 @@ st.markdown('<h3 style="background-color:#e8e8e8;padding:10px;">📋 Prüf- & Te
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    pruefumfang = st.text_input("📄 Prüfumfang")
+    auftrag = st.text_input("📄 Auftrag")
     taetigkeit = st.text_input("🛠️ Tätigkeit")
     fehlerbild_a = st.text_input("❌ Fehlerbild A")
+    fehlerbild_b = st.text_input("❌ Fehlerbild B")
+    fehlerbild_c = st.text_input("❌ Fehlerbild C")
     fehlerbild_d = st.text_input("❌ Fehlerbild D")
-    motorentyp = st.text_input("🚗 FZG / Motorentyp")
-    ansprechpartner_bbw = st.text_input("👷 Ansprechpartner BBW")
-    pruefort = st.text_input("🏭 Sortier-/Prüfort")
-
+    fehlerbild_e = st.text_input("❌ Fehlerbild E")
+    fehlerbild_f = st.text_input("❌ Fehlerbild F")
+    
 with col2:
     lieferant = st.text_input("🚚 Lieferant")
-    fehlerbild_b = st.text_input("❌ Fehlerbild B")
-    fehlerbild_e = st.text_input("❌ Fehlerbild E")
-    verbautakt = st.text_input("⚙️ Verbaukontakt")
+    kst = st.text_input("⚙️ KST")
     tagesbedarf = st.text_input("📦 Tagesbedarf")
     ansprechpartner_kunde = st.text_input("👤 Ansprechpartner Kunde")
     arbeitsorte = st.text_input("📍 Arbeitsort(e)")
+    Werk = st.text_input("Prüfort Werk")
 
 with col3:
-    fehlerbild_c = st.text_input("❌ Fehlerbild C")
-    fehlerbild_f = st.text_input("❌ Fehlerbild F")
-    abteilung_bmw = st.text_input("🏷️ Abteilung BMW")
+
+    abteilung = st.text_input("🏷️ Abteilung")
     sortierregel = st.text_input("📑 Sortierregel")
+    motorentyp = st.text_input("🚗 FZG / Motorentyp")
+    Auftraggeber = st.text_input("👷 Auftraggeber")
+    pruefort = st.text_input("🏭 Sortier-/Prüfort")
+    Koordinator = st.text_input("Koordinator")
+
 
 st.markdown("---")
 
@@ -387,12 +397,14 @@ if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
 
 if st.button("✅ Formular abgeben"):
     data = {
-        # Page 1
+        # ✅ First Section (Pages 1–2)
+        "Freigabe": freigabe_bmw,
         "Sortierstart": str(sortierstart),
-        "AuftragsID BBW1": auftrag_bbw,
-        "AuftragsID BMW1": auftrag_bmw,
-        "Kritischster BI": str(kritischster_bi),
-        "Pruefumfang": pruefumfang,
+        "Auftrags-ID": auftrag_bbw,
+        "Auftrag": pruefumfang,
+        "BI": str(kritischster_bi),
+        "VorgangsNr": auftrag_bmw,
+    
         "Tätigkeit": taetigkeit,
         "Lieferant": lieferant,
         "Fehlerbild A": fehlerbild_a,
@@ -401,81 +413,50 @@ if st.button("✅ Formular abgeben"):
         "Fehlerbild D": fehlerbild_d,
         "Fehlerbild E": fehlerbild_e,
         "Fehlerbild F": fehlerbild_f,
-        "FZG  Motorentyp": motorentyp,
-        "Verbautakt": verbautakt,
+        "FZG / Motorentyp": motorentyp,
+        "KST": verbautakt,
         "Tagesbedarf": tagesbedarf,
-        "Abteilung BMW": abteilung_bmw,
-        "Ansprechpartner BBW": ansprechpartner_bbw,
+    
+        "Abteilung": abteilung_bmw,
+        "Auftraggeber": ansprechpartner_bbw,
         "Ansprechpartner Kunde": ansprechpartner_kunde,
-        "SortierPrüfort": pruefort,
-        "Arbeitsorte": arbeitsorte,
+        "Prüfort Werk": pruefort,
+        "Arbeitsort(e)": arbeitsorte,
         "Sortierregel": sortierregel,
-        "IO Markierung": io_markierung,
+    
+        "Markierung": handschuhe,
         "PSA": psa,
-        "Handschuhe": handschuhe,
-        "Zusätzliche Standards": zusaetzliche_standards,
+        "Zusätzliche Infos": f"COP: {cop}, ESD: {esd}, TecSa: {tecsa}",
         "COP": cop,
+    
         "Prüfablauf": pruefablauf,
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
-
-        # Page 3–6 (NIO, Prüfmittel, Prüfablauf, IO-Markierung)
-        "NIO-Bauteil3": "—",
-        "Hilfsmittel4": "—",
-        "Prüfablauf5": pruefablauf,
-        "IO-Markierung6": io_markierung,
-
-        "Abteilung BMW3": abteilung_bmw,
-        "Ansprechpartner Kunde3": ansprechpartner_kunde,
-        "AAW erstellt von3": "Dein Name",
-
-        "Abteilung BMW4": abteilung_bmw,
-        "Ansprechpartner Kunde4": ansprechpartner_kunde,
-        "AAW erstellt von4": "Dein Name",
-
-        "Abteilung BMW5": abteilung_bmw,
-        "Ansprechpartner Kunde5": ansprechpartner_kunde,
-        "AAW erstellt von5": "Dein Name",
-
-        "Abteilung BMW6": abteilung_bmw,
-        "Ansprechpartner Kunde6": ansprechpartner_kunde,
-        "AAW erstellt von6": "Dein Name",
-
-        # Page 7: Nachweis Freigabe
+    
+        # ✅ Page 7 – Freigabe Section
         "Freigabe Formel I": freigabe_bmw,
         "Zusatz": zusatz_qcat,
         "AA1": anweisungen,
-
-        # Page 8: Materialdaten rows:1-2
-               
+    
+        # ✅ Page 8 – Materialdaten Rows 1–2
         "Materialnummer1": cleaned_df.iloc[0]["Materialnummer"] if len(cleaned_df) > 0 else "",
         "Materialbezeichnung1": cleaned_df.iloc[0]["Materialbezeichnung"] if len(cleaned_df) > 0 else "",
         "Lieferant1": cleaned_df.iloc[0]["Lieferant"] if len(cleaned_df) > 0 else "",
         "Fehlort1": cleaned_df.iloc[0]["Fehlerort"] if len(cleaned_df) > 0 else "",
         "Fehlart1": cleaned_df.iloc[0]["Fehlerart"] if len(cleaned_df) > 0 else "",
         "BI_1": cleaned_df.iloc[0]["BI"] if len(cleaned_df) > 0 else "",
-
+    
         "Materialnummer2": cleaned_df.iloc[1]["Materialnummer"] if len(cleaned_df) > 1 else "",
         "Materialbezeichnung2": cleaned_df.iloc[1]["Materialbezeichnung"] if len(cleaned_df) > 1 else "",
         "Lieferant2": cleaned_df.iloc[1]["Lieferant"] if len(cleaned_df) > 1 else "",
         "Fehlort2": cleaned_df.iloc[1]["Fehlerort"] if len(cleaned_df) > 1 else "",
         "Fehlart2": cleaned_df.iloc[1]["Fehlerart"] if len(cleaned_df) > 1 else "",
         "BI_2": cleaned_df.iloc[1]["BI"] if len(cleaned_df) > 1 else "",
-
     }
 
 
 
 
-        # 🔁 Repeat shared fields across sections
-    for i in range(2, 7):  # Pages 2–6
-        data[f"Sortierstart{i}"] = str(sortierstart)
-        data[f"AuftragsID BBW{i}"] = auftrag_bbw
-        data[f"AuftragsID BMW{i}"] = auftrag_bmw
-        data[f"Kritischster BI{i}"] = str(kritischster_bi)
-        data[f"Pruefumfang{i}"] = pruefumfang
-        data[f"Abteilung BMW{i}"] = abteilung_bmw
-        data[f"Ansprechpartner Kunde{i}"] = ansprechpartner_kunde
-        data[f"AAW erstellt von{i}"] = erstellt_von
+
     
 
         # Dynamisch erzeugtes image_fields Dictionary für spezifisches Mapping
@@ -498,7 +479,7 @@ if st.button("✅ Formular abgeben"):
                 uploaded_bauteilbilder.append(st.session_state[key])
 
 
-    st.write("DEBUG – pruefumfang:", pruefumfang)
+   
 
 
     # Output in memory (no saving to disk)
