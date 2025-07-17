@@ -479,9 +479,9 @@ if st.button("✅ Formular abgeben"):
         "Markierung": markierung,
         "PSA": ", ".join(ausgewaehlte_bilder), 
         "Cop": cop_field_value,
-        "Zusätzliche Infos": zusaetzliche_infos
+        "Zusätzliche Infos": zusaetzliche_infos,
     
-        "Prüfablauf": beschreibung_pruefablauf
+        "Prüfablauf": beschreibung_pruefablauf,
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
     
         # ✅ Page 7 – Freigabe Section
