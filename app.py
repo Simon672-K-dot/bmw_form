@@ -147,9 +147,19 @@ with col_left:
     zusaetzliche_infos = st.text_area("Zusätzliche Angaben")
 
 with col_right:
-    cop_relevant = st.selectbox("COP-Relevant", ["Ja", "Nein"])
-    esd_relevant = st.selectbox("ESD-Relevant", ["Ja", "Nein"])
-    tecsa_relevant = st.selectbox("TecSa-Relevant", ["Ja", "Nein"])
+    cop = st.selectbox("COP-Relevant", ["", "Ja", "Nein"])
+    esd = st.selectbox("ESD-Relevant", ["", "Ja", "Nein"])
+    tecsa = st.selectbox("TecSa-Relevant", ["", "Ja", "Nein"])
+
+# Build COP field value for PDF (print only if selection is not empty)
+if cop == "Ja":
+    cop_field_value = "cop: Ja"
+elif cop == "Nein":
+    cop_field_value = "cop: Nein"
+else:
+    cop_field_value = ""
+
+
 
 
 
@@ -408,8 +418,30 @@ if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
                 st.write(f"Field name: '{name}'")
         else:
             st.warning("⚠️ Keine Formularfelder gefunden.")
-    except Exception as e:
-        st.error(f"❌ Fehler beim Lesen der PDF: {e}")
+    except Exception as ecop_text_lines = []
+
+
+
+
+
+
+# Build content for the "Cop" field (combined string)
+
+
+# Combine COP/ESD/TecSa selections into one string for the "Cop" PDF field
+cop_text_lines = []
+
+if cop:
+    cop_text_lines.append(f"cop: {cop}")
+if esd:
+    cop_text_lines.append(f"esd: {esd}")
+if tecsa:
+    cop_text_lines.append(f"tecsa: {tecsa}")
+
+cop_field_value = "\n".join(cop_text_lines)
+
+
+
 
 
 
@@ -444,12 +476,11 @@ if st.button("✅ Formular abgeben"):
         "Sortierregel": sortierregel,
         "Koordinator": Koordinator,
     
-        "Markierung": handschuhe,
+        "Markierung": markierung,
         "PSA": psa,
-        "Zusätzliche Infos": f"COP: {cop}, ESD: {esd}, TecSa: {tecsa}",
-        "COP": cop,
+        "Cop": cop_field_value,
     
-        "Prüfablauf": pruefablauf,
+        "Prüfablauf": beschreibung_pruefablauf
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
     
         # ✅ Page 7 – Freigabe Section
