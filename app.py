@@ -448,7 +448,7 @@ if st.button("✅ Formular abgeben"):
         # ✅ First Section (Pages 1–2)
         "Freigabe": freigabe_bmw,
         "Sortierstart": str(sortierstart),
-        "Auftrags-ID": auftrags_id,
+        "AuftragsID": auftrags_id,
         "Auftrag": auftrag,
         "BI": str(bi),
         "VorgangsNr": vorgangs_nr,
