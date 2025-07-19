@@ -484,7 +484,6 @@ if st.button("✅ Formular abgeben"):
     
         # ✅ Page 7 – Freigabe Section
         "Freigabe Formel I": freigabe_bmw,
-        "Zusatz": zusatz_qcat,
         "AA1": anweisungen,
     
         # ✅ Page 8 – Materialdaten Rows 1–2
