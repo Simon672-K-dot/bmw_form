@@ -346,6 +346,7 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
     if image_dict:
         for field_name, img_file in image_dict.items():
             if img_file:
+                img_file.seek(0)
                 img = Image.open(img_file).convert("RGB")
                 img_byte_arr = io.BytesIO()
                 img.save(img_byte_arr, format="PNG")
@@ -369,6 +370,7 @@ def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=N
         # ➕ Neue Seiten für zusätzliche Bilder (z.B. Bauteildokumentation)
     if extra_images:
         for img_file in extra_images:
+            img_file.seek(0)
             img = Image.open(img_file).convert("RGB")
             img_byte_arr = io.BytesIO()
             img.save(img_byte_arr, format="PNG")
