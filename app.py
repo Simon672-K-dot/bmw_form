@@ -532,7 +532,7 @@ if st.button("✅ Formular abgeben"):
     st.download_button(
         label="📥 PDF herunterladen",
         data=pdf_output.getvalue(),
-        file_name=f"Arbeitsanweisung_{auftrag_bmw}.pdf",
+        file_name = f"Arbeitsanweisung_{auftrag}.pdf",
         mime="application/pdf"
     )
 
