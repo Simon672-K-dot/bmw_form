@@ -484,7 +484,7 @@ if st.button("✅ Formular abgeben"):
     
         # ✅ Page 7 – Freigabe Section
         "Freigabe Formel I": freigabe_bmw,
-        "AA1": anweisungen,
+        "AAW erstellt": AAW,
     
         # ✅ Page 8 – Materialdaten Rows 1–2
         "Materialnummer1": cleaned_df.iloc[0]["Materialnummer"] if len(cleaned_df) > 0 else "",
