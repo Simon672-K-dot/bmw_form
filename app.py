@@ -509,7 +509,7 @@ if st.button("✅ Formular abgeben"):
     
     #Create image and comment field mapping directly from session state
     image_fields = {}
-    extra_images = []
+    image_index = 1
     
     for typ in ["Bauteilbild", "NIO–Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO–Markierung"]:
         for i in range(10):
@@ -517,12 +517,20 @@ if st.button("✅ Formular abgeben"):
             comment_key = f"kommentar_{typ}_{i}"
     
             if image_key in st.session_state and st.session_state[image_key]:
-                image_fields[f"Bauteilbild{i+2}"] = st.session_state[image_key]
-                image_fields[f"Kommentar{i+2}"] = st.session_state.get(comment_key, "")
+                image_fields[f"Bild{image_index}"] = st.session_state[image_key]
+                image_fields[f"Kommentar{image_index}"] = st.session_state.get(comment_key, "")
+                image_index += 1
 
+    missing_images = [k for k in image_fields if k.startswith("Bild") and not image_fields[k]]
+    if missing_images:
+        st.warning(f"❌ Bitte lade alle Bilder hoch für: {', '.join(missing_images)}")
+        st.stop()
 
-
-                                              
+    
+    
+    
+    
+                                                  
     # Output in memory (no saving to disk)
     pdf_output = BytesIO()
     fill_pdf_with_multiple_images("bbw_template_fillable.pdf", pdf_output, data, image_fields, extra_images)
