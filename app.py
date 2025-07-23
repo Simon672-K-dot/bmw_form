@@ -450,7 +450,7 @@ if st.button("✅ Formular abgeben"):
     
 # Call your new function to generate the PDF
     output_path = fill_pdf_with_fields_and_images(
-        field_data,
+        data,
         image_comment_blocks,
         template_path="template.pdf",
         output_path="arbeitsanweisung_output.pdf"
