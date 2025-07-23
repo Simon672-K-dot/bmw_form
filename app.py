@@ -228,6 +228,77 @@ def render_block(typ, index):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # --- Serienbehälter Blöcke ---
 for i in range(num_bauteilbild):
     render_block("Bauteilbild", i)
@@ -243,6 +314,17 @@ for i in range(num_pruefablauf):
 
 for i in range(num_io_markierung):
     render_block("IO-Markierung", i)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -502,7 +584,6 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
 
 
 
-
 if st.button("✅ Formular abgeben"):
     data = {
         # ✅ First Section (Pages 1–2)
@@ -563,7 +644,20 @@ if st.button("✅ Formular abgeben"):
         "Fehlart2": cleaned_df.iloc[1]["Fehlerart"] if len(cleaned_df) > 1 else "",
         "BI_2": cleaned_df.iloc[1]["BI"] if len(cleaned_df) > 1 else "",
     }
+
+
+        
+    # ✅ Map image comments and names to PDF fields
+    data["Kommentar1"] = image_comment_blocks[0]["comment"] if len(image_comment_blocks) > 0 else ""
+    data["Kommentar2"] = image_comment_blocks[1]["comment"] if len(image_comment_blocks) > 1 else ""
+    data["Kommentar3"] = image_comment_blocks[2]["comment"] if len(image_comment_blocks) > 2 else ""
+    data["Kommentar4"] = image_comment_blocks[3]["comment"] if len(image_comment_blocks) > 3 else ""
     
+    data["Name1"] = image_comment_blocks[0]["name"] if len(image_comment_blocks) > 0 else ""
+    data["Name2"] = image_comment_blocks[1]["name"] if len(image_comment_blocks) > 1 else ""
+    data["Name3"] = image_comment_blocks[2]["name"] if len(image_comment_blocks) > 2 else ""
+    data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else ""
+        
 
     
 # Call your new function to generate the PDF
