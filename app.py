@@ -3,6 +3,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+import fitz
+
 
 st.set_page_config(page_title="BMW Arbeitsanweisung", layout="wide")
 
