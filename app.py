@@ -342,7 +342,7 @@ if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
     from PyPDF2 import PdfReader
     import os
 
-    pdf_path = "bbw_template_fillable.pdf"
+    pdf_path = "template.pdf"
     st.write("📁 Dateipfad:", pdf_path)
     st.write("🧪 Datei existiert:", os.path.exists(pdf_path))
 
@@ -420,6 +420,8 @@ if st.button("✅ Formular abgeben"):
         "PSA": ", ".join(ausgewaehlte_bilder), 
         "Cop": cop_field_value,
         "Zusätzliche Infos": zusaetzliche_infos,
+        "Rev":rev_text,
+        
     
         "Prüfablauf": beschreibung_pruefablauf,
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
@@ -443,48 +445,27 @@ if st.button("✅ Formular abgeben"):
         "Fehlart2": cleaned_df.iloc[1]["Fehlerart"] if len(cleaned_df) > 1 else "",
         "BI_2": cleaned_df.iloc[1]["BI"] if len(cleaned_df) > 1 else "",
     }
-
-
-
-    
-    #Create image and comment field mapping directly from session state
-    image_fields = {}
-    image_index = 1
-    
-    for typ in ["Bauteilbild", "NIO–Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO–Markierung"]:
-        for i in range(10):
-            image_key = f"img_{typ}_{i}"
-            comment_key = f"kommentar_{typ}_{i}"
-    
-            if image_key in st.session_state and st.session_state[image_key]:
-                image_fields[f"Bild{image_index}"] = st.session_state[image_key]
-                image_fields[f"Kommentar{image_index}"] = st.session_state.get(comment_key, "")
-                image_index += 1
-
-    missing_images = [k for k in image_fields if k.startswith("Bild") and not image_fields[k]]
-    if missing_images:
-        st.warning(f"❌ Bitte lade alle Bilder hoch für: {', '.join(missing_images)}")
-        st.stop()
-
-    
-    
-    
-    
-                                                  
-    # Output in memory (no saving to disk)
-    pdf_output = BytesIO()
-    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", pdf_output, data, image_fields, extra_images)
-
-
-
     
 
-    st.download_button(
-        label="📥 PDF herunterladen",
-        data=pdf_output.getvalue(),
-        file_name = f"Arbeitsanweisung_{auftrag}.pdf",
-        mime="application/pdf"
+    
+# Call your new function to generate the PDF
+    output_path = fill_pdf_with_fields_and_images(
+        field_data,
+        image_comment_blocks,
+        template_path="template.pdf",
+        output_path="arbeitsanweisung_output.pdf"
     )
+
+    # ✅ Show the download button
+    with open(output_path, "rb") as f:
+        st.download_button(
+            "📥 PDF herunterladen",
+            f,
+            file_name=f"Arbeitsanweisung_{auftrags_id}.pdf",  # 👈 here
+            mime="application/pdf"
+        )
+
+
 
     st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF generiert!")
 
@@ -492,8 +473,21 @@ if st.button("✅ Formular abgeben"):
 
 
 
+
+
+
+
+
+
+    
+
+
+
+
+    
+
 from PyPDF2 import PdfReader
-reader = PdfReader("bbw_template_fillable.pdf")
+reader = PdfReader("template.pdf")
 fields = reader.get_fields()
 for name in fields:
     print(name)
