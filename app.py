@@ -20,14 +20,18 @@ st.markdown('<h1 style="text-align:center;">📄 Arbeitsanweisung</h1>', unsafe_
 sortierstart = st.date_input("📅 Sortierstart")
 st.write("DEBUG – Sortierstart:", sortierstart)
 
-# --- Zweite Zeile: Freigabe Überschrift ---
-st.markdown("### 📌 Freigabe")
+
+
+
+
 
 # Unterhalb von Freigabe: vier Felder nebeneinander
 col_freigabe, col_ids1, col_ids2, col_ids3 = st.columns(4)
 
 with col_freigabe:
-    freigabe_bmw = st.text_input("✅ Rev/Freigabe")
+    freigabe_bmw = st.text_input("✅ Freigabe")
+    rev_text = st.text_input("🔁 REV (erscheint auf jeder Seite)")
+
 
 with col_ids1:
     auftrags_id = st.text_input("🧾 Auftrags-ID")
@@ -203,11 +207,9 @@ def render_block(typ, index):
             st.image(bild, use_container_width=True)
 
     with col_kommentar:
-        st.text_area(
-            "💬 Kommentar",
-            height=200,
-            key=f"kommentar_{typ}_{index}"
-        )
+        st.text_input("📝 Name (z. B. NIO-Bauteil, IO-Bauteil)", key=f"name_{typ}_{index}")
+        st.text_area("💬 Kommentar", height=200, key=f"kommentar_{typ}_{index}")
+    
 
     st.markdown("---")
 
@@ -243,18 +245,33 @@ for i in range(num_io_markierung):
 
 
 
-# 🔄 Dynamisch hochgeladene Bilder aus render_block() einsammeln
-uploaded_bauteilbilder = []
+# 🔄 bilder
+
+image_comment_blocks = []
 
 for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
-    for i in range(10):  # max 10 Einträge je Typ
-        key = f"img_{typ}_{i}"
-        if key in st.session_state and st.session_state[key] is not None:
-            uploaded_bauteilbilder.append(st.session_state[key])
+    i = 0
+        image_key = f"img_{typ}_{i}"
+        comment_key = f"kommentar_{typ}_{i}"
+        name_key = f"name_{typ}_{i}"
+
+        image = st.session_state.get(image_key)
+        comment = st.session_state.get(comment_key)
+        name = st.session_state.get(name_key)
+
+        if image and comment and name:
+            image_comment_blocks.append({
+                "image": image,
+                "comment": comment,
+                "name": name
+            })
+
+if len(image_comment_blocks) > 4:
+    st.warning("⚠️ Maximal 4 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
+    image_comment_blocks = image_comment_blocks[:4]
 
 
-
-
+   
 
 
 
@@ -308,83 +325,6 @@ else:
 
 
 
-
-
-
-
-
-
-
-
-
-#FUNCTION 
-
-
-
-
-def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None, extra_images=None):
-
-    import fitz  # PyMuPDF
-    from PIL import Image
-    import io
-
-    doc = fitz.open(template_path)
-
-    # Fill text fields
-    for page in doc:
-        widgets = page.widgets()
-        if widgets:
-            for widget in widgets:
-                field_name = widget.field_name
-                if field_name in data:
-                    widget.field_value = data[field_name]
-                    widget.update()
-
-                
-
-    # ✅ Insert images at placeholder fields
-    if image_dict:
-        for field_name, img_file in image_dict.items():
-            if img_file:
-                img_file.seek(0)
-                img = Image.open(img_file).convert("RGB")
-                img_byte_arr = io.BytesIO()
-                img.save(img_byte_arr, format="PNG")
-                img_stream = img_byte_arr.getvalue()
-
-                for page in doc:
-                    widgets = page.widgets()
-                    for widget in widgets:
-                        if widget.field_name == field_name:
-                            image_rect = widget.rect
-                            widget.field_value = ""
-                            widget.update()
-                            page.insert_image(image_rect, stream=img_stream)
-                            break
-        # ✅ Remove extra pages after Anhang
-    while len(doc) > 8:
-        doc.delete_page(len(doc) - 1)
-
-
-
-        # ➕ Neue Seiten für zusätzliche Bilder (z.B. Bauteildokumentation)
-    if extra_images:
-        for img_file in extra_images:
-            img_file.seek(0)
-            img = Image.open(img_file).convert("RGB")
-            img_byte_arr = io.BytesIO()
-            img.save(img_byte_arr, format="PNG")
-            img_stream = img_byte_arr.getvalue()
-
-            # Neue leere Seite (A4-Größe)
-            page = doc.new_page(width=595, height=842)
-
-            # Bild auf Seite einfügen mit Rand
-            page.insert_image(fitz.Rect(50, 50, 545, 792), stream=img_stream)
-
-    doc.save(output_path)
-    doc.close()
-    
    
 
 
@@ -557,6 +497,54 @@ reader = PdfReader("bbw_template_fillable.pdf")
 fields = reader.get_fields()
 for name in fields:
     print(name)
+
+
+
+
+
+
+
+import fitz  # PyMuPDF
+
+
+
+def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_path="template.pdf", output_path="arbeitsanweisung_output.pdf"):
+    doc = fitz.open(template_path)
+
+    # Fill all shared fields (e.g. Auftrag, BI, Rev)
+    for page in doc:
+        for widget in page.widgets():
+            field_name = widget.field_name
+            if field_name in field_data:
+                widget.field_value = str(field_data[field_name])
+                widget.update()
+
+    # Fill up to 4 image + comment + name fields
+    for i, block in enumerate(image_comment_blocks):
+        index = i + 1  # for Bild1, Kommentar1, Name/Name2...
+
+        bild_field = f"Bild{index}"
+        kommentar_field = f"Kommentar{index}"
+        name_field = "Name" if index == 1 else f"Name{index}"
+
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == bild_field:
+                    rect = widget.rect
+                    img_stream = block["image"].read()
+                    page.insert_image(rect, stream=img_stream)
+                    block["image"].seek(0)  # Reset stream in case reused
+
+                elif widget.field_name == kommentar_field:
+                    widget.field_value = block["comment"]
+                    widget.update()
+
+                elif widget.field_name == name_field:
+                    widget.field_value = block["name"]
+                    widget.update()
+
+    doc.save(output_path)
+    return output_path
 
 
     
