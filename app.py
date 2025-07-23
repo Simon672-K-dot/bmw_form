@@ -247,24 +247,20 @@ for i in range(num_io_markierung):
 
 
 
+
 # 🔄 bilder
 
 image_comment_blocks = []
 
-
-# ✅ Manually add the image from the first page (bauteilbild1) into the list
+# ✅ Add image from the first page (manually)
 if "bauteilbild1" in st.session_state and st.session_state["bauteilbild1"]:
     image_comment_blocks.append({
         "image": st.session_state["bauteilbild1"],
-        "comment": "",  # Optional: replace with actual comment field
-        "name": "Bauteilbild (Seite 1)"  # Optional: replace with separate name input
+        "comment": "",  # or: st.session_state.get("kommentar_erste_bild", "")
+        "name": "Bauteilbild (Seite 1)"
     })
 
-
-
-
-
-
+# ✅ Add image blocks from the expandable sections
 for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
     i = 0
     image_key = f"img_{typ}_{i}"
@@ -281,6 +277,27 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Pr�
             "comment": comment,
             "name": name
         })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if len(image_comment_blocks) > 4:
     st.warning("⚠️ Maximal 4 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
