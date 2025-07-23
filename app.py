@@ -251,6 +251,20 @@ for i in range(num_io_markierung):
 
 image_comment_blocks = []
 
+
+# ✅ Manually add the image from the first page (bauteilbild1) into the list
+if "bauteilbild1" in st.session_state and st.session_state["bauteilbild1"]:
+    image_comment_blocks.append({
+        "image": st.session_state["bauteilbild1"],
+        "comment": "",  # Optional: replace with actual comment field
+        "name": "Bauteilbild (Seite 1)"  # Optional: replace with separate name input
+    })
+
+
+
+
+
+
 for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
     i = 0
     image_key = f"img_{typ}_{i}"
