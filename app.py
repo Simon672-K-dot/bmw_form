@@ -309,6 +309,20 @@ if len(image_comment_blocks) > 4:
     image_comment_blocks = image_comment_blocks[:4]
 
 
+
+# ✅ Map image comments and names to PDF fields
+data["Kommentar1"] = image_comment_blocks[0]["comment"] if len(image_comment_blocks) > 0 else ""
+data["Kommentar2"] = image_comment_blocks[1]["comment"] if len(image_comment_blocks) > 1 else ""
+data["Kommentar3"] = image_comment_blocks[2]["comment"] if len(image_comment_blocks) > 2 else ""
+data["Kommentar4"] = image_comment_blocks[3]["comment"] if len(image_comment_blocks) > 3 else ""
+
+data["Name1"] = image_comment_blocks[0]["name"] if len(image_comment_blocks) > 0 else ""
+data["Name2"] = image_comment_blocks[1]["name"] if len(image_comment_blocks) > 1 else ""
+data["Name3"] = image_comment_blocks[2]["name"] if len(image_comment_blocks) > 2 else ""
+data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else ""
+
+
+
    
 
 
