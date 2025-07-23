@@ -251,20 +251,20 @@ image_comment_blocks = []
 
 for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
     i = 0
-        image_key = f"img_{typ}_{i}"
-        comment_key = f"kommentar_{typ}_{i}"
-        name_key = f"name_{typ}_{i}"
+    image_key = f"img_{typ}_{i}"
+    comment_key = f"kommentar_{typ}_{i}"
+    name_key = f"name_{typ}_{i}"
 
-        image = st.session_state.get(image_key)
-        comment = st.session_state.get(comment_key)
-        name = st.session_state.get(name_key)
+    image = st.session_state.get(image_key)
+    comment = st.session_state.get(comment_key)
+    name = st.session_state.get(name_key)
 
-        if image and comment and name:
-            image_comment_blocks.append({
-                "image": image,
-                "comment": comment,
-                "name": name
-            })
+    if image and comment and name:
+        image_comment_blocks.append({
+            "image": image,
+            "comment": comment,
+            "name": name
+        })
 
 if len(image_comment_blocks) > 4:
     st.warning("⚠️ Maximal 4 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
