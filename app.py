@@ -381,6 +381,72 @@ cop_field_value = "\n".join(cop_text_lines)
 
 
 
+def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_path="template.pdf", output_path="arbeitsanweisung_output.pdf"):
+    doc = fitz.open(template_path)
+
+    # Fill all shared fields (e.g. Auftrag, BI, Rev)
+    for page in doc:
+        for widget in page.widgets():
+            field_name = widget.field_name
+            if field_name in field_data:
+                widget.field_value = str(field_data[field_name])
+                widget.update()
+
+    # Fill up to 4 image + comment + name fields
+    for i, block in enumerate(image_comment_blocks):
+        index = i + 1  # for Bild1, Kommentar1, Name/Name2...
+
+        bild_field = f"Bild{index}"
+        kommentar_field = f"Kommentar{index}"
+        name_field = "Name" if index == 1 else f"Name{index}"
+
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == bild_field:
+                    rect = widget.rect
+                    img_stream = block["image"].read()
+                    page.insert_image(rect, stream=img_stream)
+                    block["image"].seek(0)  # Reset stream in case reused
+
+                elif widget.field_name == kommentar_field:
+                    widget.field_value = block["comment"]
+                    widget.update()
+
+                elif widget.field_name == name_field:
+                    widget.field_value = block["name"]
+                    widget.update()
+
+    doc.save(output_path)
+    return output_path
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
