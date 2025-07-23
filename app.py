@@ -269,10 +269,7 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "PrÃ¼f-/Hilfsmittel", "Allgemeiner PrÃ
             "name": name
         })
         image_number = len(image_comment_blocks)  # e.g., 1, 2, 3, ...
-        data[f"Kommentar{image_number}"] = comment
-        data[f"Name{image_number}"] = name
-    
-   
+        
 
 
 if len(image_comment_blocks) > 4:
