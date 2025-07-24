@@ -3,6 +3,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+import fitz
+
 
 st.set_page_config(page_title="BMW Arbeitsanweisung", layout="wide")
 
@@ -20,18 +22,28 @@ st.markdown('<h1 style="text-align:center;">📄 Arbeitsanweisung</h1>', unsafe_
 sortierstart = st.date_input("📅 Sortierstart")
 st.write("DEBUG – Sortierstart:", sortierstart)
 
-# --- Zweite Zeile: Freigabe Überschrift ---
-st.markdown("### 📌 Freigabe")
 
 
-# Unterhalb von Freigabe: drei IDs nebeneinander
-col_ids1, col_ids2, col_ids3 = st.columns(3)
+
+
+
+# Unterhalb von Freigabe: vier Felder nebeneinander
+col_freigabe, col_ids1, col_ids2, col_ids3 = st.columns(4)
+
+with col_freigabe:
+    freigabe_bmw = st.text_input("✅ Freigabe")
+    rev_text = st.text_input("🔁 REV (erscheint auf jeder Seite)")
+
+
 with col_ids1:
-    auftrag_bbw = st.text_input("🧾 Auftrags-ID BBW")
+    auftrags_id = st.text_input("🧾 Auftrags-ID")
+
 with col_ids2:
-    auftrag_bmw = st.text_input("🧾 Auftrags-ID BMW")
+    vorgangs_nr = st.text_input("🧾 VorgangsNr")
+
 with col_ids3:
-    kritischster_bi = st.selectbox("📊 Kritischster BI", list(range(1, 11)))
+    bi = st.selectbox("📊 BI", list(range(1, 8)))
+
 
 st.markdown("---")
 
@@ -40,53 +52,47 @@ st.markdown('<h3 style="background-color:#e8e8e8;padding:10px;">📋 Prüf- & Te
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    pruefumfang = st.text_input("📄 Prüfumfang")
-    taetigkeit = st.text_input("🛠️ Tätigkeit")
     fehlerbild_a = st.text_input("❌ Fehlerbild A")
-    fehlerbild_d = st.text_input("❌ Fehlerbild D")
-    motorentyp = st.text_input("🚗 FZG / Motorentyp")
-    ansprechpartner_bbw = st.text_input("👷 Ansprechpartner BBW")
-    pruefort = st.text_input("🏭 Sortier-/Prüfort")
-
-with col2:
-    lieferant = st.text_input("🚚 Lieferant")
     fehlerbild_b = st.text_input("❌ Fehlerbild B")
+    fehlerbild_c = st.text_input("❌ Fehlerbild C")
+    fehlerbild_d = st.text_input("❌ Fehlerbild D")
     fehlerbild_e = st.text_input("❌ Fehlerbild E")
-    verbautakt = st.text_input("⚙️ Verbaukontakt")
+    fehlerbild_f = st.text_input("❌ Fehlerbild F")
+    
+with col2:
+    auftrag = st.text_input("📄 Auftrag")
+    lieferant = st.text_input("🚚 Lieferant")
+    kst = st.text_input("⚙️ KST")
     tagesbedarf = st.text_input("📦 Tagesbedarf")
     ansprechpartner_kunde = st.text_input("👤 Ansprechpartner Kunde")
     arbeitsorte = st.text_input("📍 Arbeitsort(e)")
+    Werk = st.text_input("Prüfort Werk")
+    
 
 with col3:
-    fehlerbild_c = st.text_input("❌ Fehlerbild C")
-    fehlerbild_f = st.text_input("❌ Fehlerbild F")
-    abteilung_bmw = st.text_input("🏷️ Abteilung BMW")
+    taetigkeit = st.text_input("🛠️ Tätigkeit")
+    abteilung = st.text_input("🏷️ Abteilung")
     sortierregel = st.text_input("📑 Sortierregel")
+    motorentyp = st.text_input("🚗 FZG / Motorentyp")
+    Auftraggeber = st.text_input("👷 Auftraggeber")
+    pruefort = st.text_input("🏭 Sortier-/Prüfort")
+    Koordinator = st.text_input("Koordinator")
+    AAW = st.text_input("AAW erstellt")
+    
+
 
 st.markdown("---")
 
-# --- I.O. Markierung & PSA Bereich ---
-st.markdown('<h3 style="background-color:#dff0d8;padding:10px;">✅ I.O. Markierung</h3>', unsafe_allow_html=True)
-io_markierung = st.text_input("Markierung gemäß Vorgabe")
+
+
+
+# ---  Markierung & PSA Bereich ---
+
+
 
 st.markdown('<h3 style="background-color:#d9edf7;padding:10px;">🧤 PSA</h3>', unsafe_allow_html=True)
-psa = st.text_input("Persönliche Schutzausrüstung (z.B. Brille, Handschuhe)")
-handschuhe = st.text_input("Handschuhe")
-zusaetzliche_standards = st.text_input("Zusätzliche Standards")
 
-# --- COP / ESD / Prüfablauf + Bild nebeneinander ---
-st.markdown('<h3 style="background-color:#fcf8e3;padding:10px;">⚙️ COP / ESD / Prüfablauf</h3>', unsafe_allow_html=True)
-col_a, col_b, col_c = st.columns([1,1,1])
-with col_a:
-    cop = st.selectbox("COP-relevant", ["Ja", "Nein"])
-    esd = st.selectbox("ESD-relevant", ["Ja", "Nein"])
-    tecsa = st.selectbox("TecSa-relevant", ["Ja", "Nein"])
-with col_b:
-    pruefablauf = st.text_area("📋 Prüfablauf")
-with col_c:
-    bild1 = st.file_uploader("📸 Bauteilbild hochladen", type=["jpg", "png", "jpeg"], key="bild1")
-
-# --- Gebotsschilder ---
+# --- PSA Symbol Selection Block ---
 st.markdown('<h3 style="background-color:#f5f5f5;padding:10px;">🛡️ Gebots- und Warnschilder (Bilderauswahl)</h3>', unsafe_allow_html=True)
 
 col_b1, col_b2, col_b3, col_b4 = st.columns(4)
@@ -94,10 +100,14 @@ col_b1, col_b2, col_b3, col_b4 = st.columns(4)
 with col_b1:
     st.image("images/fusschutz.jpg", width=100)
     fusschutz_selected = st.checkbox("Fußschutz")
+    st.image("images/helm1.png", width=100)
+    helm_selected = st.checkbox("Helm")
 
 with col_b2:
     st.image("images/warnweste.jpg", width=100)
     warnweste_selected = st.checkbox("Warnweste")
+    st.image("images/Handschuhe.png", width=100)
+    handschuhe_selected = st.checkbox("Handschuhe")
 
 with col_b3:
     st.image("images/fußgaenger.jpg", width=100)
@@ -107,39 +117,79 @@ with col_b4:
     st.image("images/augenschutz.jpg", width=100)
     augenschutz_selected = st.checkbox("Augenschutz")
 
+# Collect selected image labels
 ausgewaehlte_bilder = []
 if fusschutz_selected:
     ausgewaehlte_bilder.append("Fußschutz")
+if helm_selected:
+    ausgewaehlte_bilder.append("Helm")
 if warnweste_selected:
     ausgewaehlte_bilder.append("Warnweste")
+if handschuhe_selected:
+    ausgewaehlte_bilder.append("Handschuhe")
 if fussweg_selected:
     ausgewaehlte_bilder.append("Fußgängerweg")
 if augenschutz_selected:
     ausgewaehlte_bilder.append("Augenschutz")
 
+# Show selection
 st.markdown("**Ausgewählte Schilder:**")
-
 for schild in ausgewaehlte_bilder:
     st.markdown(f"- ✅ {schild}")
 
 
 
+# Headline: Markierung (green)
+st.markdown('<h3 style="background-color:#dff0d8;padding:10px;">✅ Markierung</h3>', unsafe_allow_html=True)
+markierung = st.text_input("Markierung gemäß Vorgabe")
 
-# --- NEUE SEITE ---
+# Headline: Beschreibung / Prüfablauf (orange)
+st.markdown('<h3 style="background-color:#ffe5b4;padding:10px;">📝 Beschreibung / Prüfablauf</h3>', unsafe_allow_html=True)
+beschreibung_pruefablauf = st.text_area("Prüfablauf Beschreibung")
 
-import streamlit as st
-from datetime import date
+# Headline: Zusätzliche Informationen (red)
+st.markdown('<h3 style="background-color:#f2dede;padding:10px;">📌 Zusätzliche Informationen</h3>', unsafe_allow_html=True)
+col_left, col_right = st.columns([2, 1])
 
-st.set_page_config(page_title="Bauteil Dokumentation", layout="wide")
+with col_left:
+    zusaetzliche_infos = st.text_area("Zusätzliche Angaben")
+
+with col_right:
+    cop = st.selectbox("COP-Relevant", ["", "Ja", "Nein"])
+    esd = st.selectbox("ESD-Relevant", ["", "Ja", "Nein"])
+    tecsa = st.selectbox("TecSa-Relevant", ["", "Ja", "Nein"])
+
+# Build COP field value for PDF (print only if selection is not empty)
+if cop == "Ja":
+    cop_field_value = "cop: Ja"
+elif cop == "Nein":
+    cop_field_value = "cop: Nein"
+else:
+    cop_field_value = ""
+
+
+
+#Bild feld für Bild 1
+
+st.markdown('<h3 style="background-color:#e1f5fe;padding:10px;">📸 Bauteilbild</h3>', unsafe_allow_html=True)
+bauteilbild = st.file_uploader("Bild des Bauteils hochladen", type=["png", "jpg", "jpeg"], key="bauteilbild1")
+
+
+
+
 
 st.markdown("## 📋 Auswahl der Bauteile zur Dokumentation")
 
+
+
 # --- Anzahl je Bauteiltyp ---
-num_serien = st.number_input("📦 Serienbehälter", min_value=0, max_value=10, value=0)
-num_io = st.number_input("✅ I.O.-Bauteil", min_value=0, max_value=10, value=0)
-num_nio = st.number_input("❌ N.I.O.-Bauteil", min_value=0, max_value=10, value=0)
-num_markierung = st.number_input("🖊️ I.O.-Markierung", min_value=0, max_value=10, value=0)
-num_freigabezettel = st.number_input("📑 Freigabezettel", min_value=0, max_value=10, value=0)
+
+num_bauteilbild = st.number_input("📸 Bauteilbild", min_value=0, max_value=10, value=0)
+num_nio = st.number_input("❌ NIO-Bauteil", min_value=0, max_value=10, value=0)
+num_hilfsmittel = st.number_input("🔧 Prüf-/Hilfsmittel", min_value=0, max_value=10, value=0)
+num_pruefablauf = st.number_input("📋 Allgemeiner Prüfablauf", min_value=0, max_value=10, value=0)
+num_io_markierung = st.number_input("🖊️ IO-Markierung", min_value=0, max_value=10, value=0)
+
 
 st.markdown("---")
 
@@ -147,93 +197,86 @@ st.markdown("---")
 def render_block(typ, index):
     st.markdown(f"<h3 style='background-color:#f0f0f0;padding:10px;'>{typ} {index+1}</h3>", unsafe_allow_html=True)
 
-    st.markdown('<div style="background-color:#e8e8e8;padding:8px;margin-bottom:10px;"><strong>📋 Prüfumfang</strong></div>', unsafe_allow_html=True)
-    st.text_area(f"Prüfumfang {typ} {index+1}", key=f"pruefumfang_{typ}_{index}")
-
     col_img, col_kommentar = st.columns([2, 1])
+
     with col_img:
-        bild = st.file_uploader(f"📸 Bild für {typ} {index+1}", type=["jpg", "jpeg", "png"], key=f"img_{typ}_{index}")
+        bild = st.file_uploader(
+            f"📸 Bild für {typ} {index+1}",
+            type=["jpg", "jpeg", "png"],
+            key=f"img_{typ}_{index}"
+        )
         if bild:
-            st.image(bild, use_column_width=True)
+            st.image(bild, use_container_width=True)
 
     with col_kommentar:
+        st.text_input("📝 Name (z. B. NIO-Bauteil, IO-Bauteil)", key=f"name_{typ}_{index}")
         st.text_area("💬 Kommentar", height=200, key=f"kommentar_{typ}_{index}")
-
-    col_a, col_b, col_c = st.columns(3)
-    with col_a:
-        st.text_input("🏢 Abteilung BMW", key=f"abteilung_{typ}_{index}")
-    with col_b:
-        st.text_input("👤 Ansprechpartner Kunde", key=f"ansprechpartner_{typ}_{index}")
-    with col_c:
-        st.text_input("🖊️ AAW erstellt von", key=f"erstellt_von_{typ}_{index}")
+    
 
     st.markdown("---")
 
+
+
+
+
 # --- Serienbehälter Blöcke ---
-for i in range(num_serien):
-    render_block("📦 Serienbehälter", i)
+for i in range(num_bauteilbild):
+    render_block("Bauteilbild", i)
 
-# --- I.O.-Bauteil Blöcke ---
-for i in range(num_io):
-    render_block("✅ I.O.-Bauteil", i)
-
-# --- N.I.O.-Bauteil Blöcke ---
 for i in range(num_nio):
-    render_block("❌ N.I.O.-Bauteil", i)
+    render_block("NIO-Bauteil", i)
 
-# --- I.O.-Markierung Blöcke ---
-for i in range(num_markierung):
-    render_block("🖊️ I.O.-Markierung", i)
+for i in range(num_hilfsmittel):
+    render_block("Prüf-/Hilfsmittel", i)
 
-# --- Freigabezettel Blöcke ---
-for i in range(num_freigabezettel):
-    render_block("📑 Freigabezettel", i)
+for i in range(num_pruefablauf):
+    render_block("Allgemeiner Prüfablauf", i)
 
-
-
-
-
-
-# --- Seite 3:Nachweis Freigabe Section---
-st.markdown('<h2 style="text-align:center; background-color:#e6e6e6; padding:10px;">🧾 Nachweis Freigabe</h2>', unsafe_allow_html=True)
-
-# Row: Freigabe BBW and BMW
-col1, col2 = st.columns(2)
-with col1:
-    freigabe_bbw = st.text_input("✅ Freigabe B.B.W", key="freigabe_bbw")
-with col2:
-    freigabe_bmw = st.text_input("🏁 Freigabe BMW", key="freigabe_bmw")
-
-# Allgemeine Anweisungen (green area)
-st.markdown('<div style="background-color:#dff0d8;padding:10px;"><strong>✅ Allgemeine Anweisungen</strong></div>', unsafe_allow_html=True)
-anweisungen = st.text_area("", height=150, key="allgemeine_anweisungen")
-
-# Zusatz für QCat-gesteuerte Aufträge
-st.markdown('<div style="background-color:#f9f9f9;padding:10px;"><strong>📌 Zusatz für QCat-gesteuerte Aufträge:</strong></div>', unsafe_allow_html=True)
-zusatz_qcat = st.text_area("", height=150, key="zusatz_qcat")
+for i in range(num_io_markierung):
+    render_block("IO-Markierung", i)
 
 
 
 
 
+# 🔄 bilder
 
-#---Seite 4:Mitarbeiter Einweisung---
+image_comment_blocks = []
 
-st.markdown("## 🧾 Einweisungsübersicht")
+# ✅ Add image from the first page (manually)
+if "bauteilbild1" in st.session_state and st.session_state["bauteilbild1"]:
+    image_comment_blocks.append({
+        "image": st.session_state["bauteilbild1"],
+        "comment": "",  # or: st.session_state.get("kommentar_erste_bild", "")
+        "name": "Bauteilbild (Seite 1)"
+    })
 
-# Define 15 rows with 5 columns
-columns = [
-    "Name unterwiesene Person",
-    "Datum Unterweisung",
-    "Unterschrift unterwiesene Person",
-    "Unterschrift Unterweisender",
-    "Unterwiesen durch"
-]
+# ✅ Add image blocks from the expandable sections
+for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+    i = 0
+    image_key = f"img_{typ}_{i}"
+    comment_key = f"kommentar_{typ}_{i}"
+    name_key = f"name_{typ}_{i}"
 
-df_matrix = pd.DataFrame({col: [""] * 15 for col in columns})
+    image = st.session_state.get(image_key)
+    comment = st.session_state.get(comment_key)
+    name = st.session_state.get(name_key)
 
-# Editable matrix-style table
-edited_matrix = st.data_editor(df_matrix, num_rows="dynamic", use_container_width=True)
+    if image:
+        image_comment_blocks.append({
+            "image": image,
+            "comment": comment or "",
+            "name": name or ""
+        })
+
+        image_number = len(image_comment_blocks)  # e.g., 1, 2, 3, ...
+        
+
+
+if len(image_comment_blocks) > 4:
+    st.warning("⚠️ Maximal 4 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
+    image_comment_blocks = image_comment_blocks[:4]
+
 
 
 
@@ -276,275 +319,336 @@ edited_df = st.data_editor(
     hide_index=True
 )
 
+
 # 🧹 Filter rows where "🗑️ Löschen?" is not checked (False or NaN)
 if not edited_df.empty:
     cleaned_df = edited_df[(edited_df["🗑️ Löschen?"] != True) | (edited_df["🗑️ Löschen?"].isna())]
+else:
+    cleaned_df = pd.DataFrame(columns=columns)
+
+# ✅ Save cleaned material data to session state
+st.session_state["material_data"] = cleaned_df.to_dict(orient="records")
 
 
 
 
-#---Seite 6: Ergebnisserfassung 
-
-
-import streamlit as st
-import pandas as pd
-
-# Title Section
-st.markdown('<h2 style="text-align:center;">📊 Ergebniserfassung</h2>', unsafe_allow_html=True)
-
-# Header section: Auftrag, Lieferant, Teile-Nr., Teilebezeichnung
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    auftrag = st.text_input("Auftrag", value="19991", disabled=True)
-with col2:
-    lieferant = st.text_input("Lieferant", value="DAIMAY FRANCE")
-with col3:
-    teil_nr = st.text_input("Teile-Nr.")
-with col4:
-    teil_bez = st.text_input("Teilebezeichnung")
-
-# Sub-header: Datum, Art der Tätigkeit, Art der Prüfung
-col5, col6, col7 = st.columns(3)
-with col5:
-    datum = st.date_input("📅 Datum")
-with col6:
-    taetigkeit = st.text_input("Art der Tätigkeit")
-with col7:
-    pruefart = st.selectbox("Art der Prüfung", [
-        "Erstprüfung", "200% Prüfung", "Wdh. Prüfung IO", "Wdh. Prüfung NIO"
-    ])
-
-# Prüfort & IO-F-NR
-col8, col9 = st.columns(2)
-with col8:
-    pruefort = st.selectbox("Prüfort", ["Q-Fläche", "Bandbegleitend"])
-with col9:
-    io_fnr = st.selectbox("IO - F. NR.", ["VZ3 Neufahrn / AP", "VZ3 München / AP"])
-
-# --- FEHLERBILDER ABSCHNITT ---
-st.markdown('<h4 style="margin-top: 30px;">🟥 Fehlerbilder:</h4>', unsafe_allow_html=True)
-
-# Erste Reihe: A, B, C mit Textfeldern
-cols_abc = st.columns([1, 4, 1, 4, 1, 4])
-with cols_abc[0]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">A</div>', unsafe_allow_html=True)
-with cols_abc[1]:
-    fehler_a = st.text_input(" ", key="fehler_a")
-with cols_abc[2]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">B</div>', unsafe_allow_html=True)
-with cols_abc[3]:
-    fehler_b = st.text_input(" ", key="fehler_b")
-with cols_abc[4]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">C</div>', unsafe_allow_html=True)
-with cols_abc[5]:
-    fehler_c = st.text_input(" ", key="fehler_c")
-
-# Zweite Reihe: D, E, F mit Textfeldern
-cols_def = st.columns([1, 4, 1, 4, 1, 4])
-with cols_def[0]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">D</div>', unsafe_allow_html=True)
-with cols_def[1]:
-    fehler_d = st.text_input(" ", key="fehler_d")
-with cols_def[2]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">E</div>', unsafe_allow_html=True)
-with cols_def[3]:
-    fehler_e = st.text_input(" ", key="fehler_e")
-with cols_def[4]:
-    st.markdown('<div style="background-color:#ff4d4d;color:white;text-align:center;font-weight:bold;padding:6px;border-radius:5px;">F</div>', unsafe_allow_html=True)
-with cols_def[5]:
-    fehler_f = st.text_input(" ", key="fehler_f")
-
-# Ergebnisseingabe Tabelle
-st.markdown('<h4 style="margin-top:20px;">📥 Ergebnisseingabe</h4>', unsafe_allow_html=True)
-
-columns = [
-    "Lieferschein Nr.", "HU-Nummer", "ID OK", "Gesamt geprüft", "IO",
-    "NIO A", "NIO B", "NIO C", "NIO D", "NIO E", "NIO F",
-    "NIO Gesamt", "Nachgearbeitet", "Rest NIO", "Bemerkung"
-]
-df_ergebnis = pd.DataFrame(columns=columns)
-
-edited_df = st.data_editor(
-    df_ergebnis,
-    num_rows="dynamic",
-    use_container_width=True,
-    key="ergebniserfassung_matrix"
-) 
-
-       
-
-
-
-
-
-
-#---Seite 7: Teil von Ergebniserfassung---
-
-
-import streamlit as st
-import pandas as pd
-
-# Set page section title (continuation of Ergebniserfassung, no new header)
-st.markdown("### 👷‍♂️ Mitarbeitereintrag zur Ergebniserfassung")
-
-# Initial table structure for Mitarbeiter-Eintrag
-default_data = {
-    "Bearbeitung durch Mitarbeiter": ["" for _ in range(5)],
-    "Anfangszeit der Prüfung": ["" for _ in range(5)],
-    "Endzeit der Prüfung": ["" for _ in range(5)],
-    "Personalnr.": ["" for _ in range(5)],
-}
-
-df_mitarbeiter = pd.DataFrame(default_data)
-
-# Use data editor for dynamic editing
-edited_mitarbeiter = st.data_editor(
-    df_mitarbeiter,
-    num_rows="dynamic",
-    use_container_width=True
-)
-
-# Right section: Freigabe & Buchung
-st.markdown("### 🧾 Freigabe und Buchung")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    freigabe_checkbox = st.checkbox("✅ Freigabe für Ergebniserfassung erteilt")
-    personalnr_freigabe = st.text_input("👤 Personalnr. (Freigabe)", key="freigabe_personal")
-
-with col2:
-    buchung_checkbox = st.checkbox("✅ Buchung der Ergebniserfassung im B.B.W. Portal erfolgt")
-    personalnr_buchung = st.text_input("👤 Personalnr. (B.B.W. Portal)", key="buchung_personal")
-
-# Remarks
-st.markdown("### 📝 Bemerkungen")
-bemerkungen = st.text_area("Bemerkungen sind im QCat zu erfassen", height=100)
-
-
-
-
-#FUNCTION 
-
-
-
-def fill_pdf_with_multiple_images(template_path, output_path, data, image_dict=None):
-    import fitz  # PyMuPDF
-    from PIL import Image
-    import io
-
-    doc = fitz.open(template_path)
-
-    # Fill text fields
-    for page in doc:
-        widgets = page.widgets()
-        if widgets:
-            for widget in widgets:
-                field_name = widget.field_name
-                if field_name in data:
-                    widget.field_value = data[field_name]
-                    widget.update()
-
-    # ✅ Insert images at placeholder fields
-    if image_dict:
-        for field_name, img_file in image_dict.items():
-            if img_file:
-                img = Image.open(img_file).convert("RGB")
-                img_byte_arr = io.BytesIO()
-                img.save(img_byte_arr, format="PNG")
-                img_stream = img_byte_arr.getvalue()
-
-                for page in doc:
-                    widgets = page.widgets()
-                    for widget in widgets:
-                        if widget.field_name == field_name:
-                            image_rect = widget.rect
-                            widget.field_value = ""
-                            widget.update()
-                            page.insert_image(image_rect, stream=img_stream)
-                            break
-
-    doc.save(output_path)
-    doc.close()
+   
 
 
 
 
 # --- FINAL SUBMIT BUTTON ---
+
+#d bug 
 from io import BytesIO
+
+st.markdown("---")
+st.markdown("### 🔍 PDF-Felder anzeigen (Debug Tool)")
+
+if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
+    from PyPDF2 import PdfReader
+    import os
+
+    pdf_path = "template.pdf"
+    st.write("📁 Dateipfad:", pdf_path)
+    st.write("🧪 Datei existiert:", os.path.exists(pdf_path))
+
+    try:
+        reader = PdfReader(pdf_path)
+        fields = reader.get_fields()
+
+        st.markdown("### 🧾 Gefundene Formularfelder:")
+        if fields:
+            for name in fields:
+                st.write(f"Field name: '{name}'")
+        else:
+            st.warning("⚠️ Keine Formularfelder gefunden.")
+    except Exception as e:
+         st.warning(f"⚠️ Fehler beim Auslesen der Felder: {e}")
+
+
+
+
+
+
+
+
+
+def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_path="template.pdf", output_path="arbeitsanweisung_output.pdf"):
+    doc = fitz.open(template_path)
+    # ✅ Manually fill Bild1 on the first page (from image_comment_blocks[0])
+    if len(image_comment_blocks) > 0:
+        bild1_stream = image_comment_blocks[0]["image"]
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == "Bild1":
+                    rect = widget.rect
+                    img_stream = bild1_stream.read()
+                    page.insert_image(rect, stream=img_stream)
+                    bild1_stream.seek(0)
+
+
+    # Fill all shared fields (e.g. Auftrag, BI, Rev)
+    for page in doc:
+        for widget in page.widgets():
+            field_name = widget.field_name
+            if field_name in field_data:
+                widget.field_value = str(field_data[field_name])
+                widget.update()
+
+    # Fill up to 4 image + comment + name fields
+    # ✅ Corrected: Fill up to 4 image + comment + name fields
+    # ✅ Fill image + comment + name starting from Bild2 on Page 2
+    # ✅ Fill Bild1 from the first image only (no comment/name)
+    if len(image_comment_blocks) > 0:
+        block = image_comment_blocks[0]
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == "Bild1":
+                    rect = widget.rect
+                    img_stream = block["image"].read()
+                    page.insert_image(rect, stream=img_stream)
+                    block["image"].seek(0)
+                    break
+
+    # ✅ Fill Bild2–Bild5, Kommentar1–4, Name1–4
+    for i in range(1, min(5, len(image_comment_blocks))):
+        block = image_comment_blocks[i]
+        bild_field = f"Bild{i + 1}"          # Starts at Bild2
+        kommentar_field = f"Kommentar{i}"    # Starts at Kommentar1
+        name_field = f"Name{i}"              # Starts at Name1
+    
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == bild_field:
+                    rect = widget.rect
+                    img_stream = block["image"].read()
+                    page.insert_image(rect, stream=img_stream)
+                    block["image"].seek(0)
+    
+                elif widget.field_name == kommentar_field:
+                    widget.field_value = block["comment"]
+                    widget.update()
+    
+                elif widget.field_name == name_field:
+                    widget.field_value = block["name"]
+                    widget.update()
+
+
+
+    doc.save(output_path)
+    return output_path
+
+
+# Save the material table input
+st.session_state["material_data"] = cleaned_df.to_dict(orient="records")
 
 
 
 if st.button("✅ Formular abgeben"):
     data = {
-        'Sortierstart': str(sortierstart),
-        'Auftrags-ID BBW': auftrag_bbw,
-        'AuftragsID BMW': auftrag_bmw,
-        'Kritischster BI': str(kritischster_bi),
-        'Prüfumfang': pruefumfang,
-        'Tätigkeit': taetigkeit,
-        'Lieferant': lieferant,
-        'Fehlerbild A': fehlerbild_a,
-        'Fehlerbild B': fehlerbild_b,
-        'Fehlerbild C': fehlerbild_c,
-        'Fehlerbild D': fehlerbild_d,
-        'Fehlerbild E': fehlerbild_e,
-        'Fehlerbild F': fehlerbild_f,
-        'FZG / Motorentyp': motorentyp,
-        'Verbaukontakt': verbautakt,
-        'Tagesbedarf': tagesbedarf,
-        'Abteilung BMW': abteilung_bmw,
-        'Ansprechpartner BBW': ansprechpartner_bbw,
-        'Ansprechpartner Kunde': ansprechpartner_kunde,
-        'Sortier-/Prüfort': pruefort,
-        'Arbeitsort(e)': arbeitsorte,
-        'Sortierregel': sortierregel,
-        'Markierung gemäß Vorgabe': io_markierung,
-        'Persönliche Schutzausrüstung (z.B. Brille, Handschuhe)': psa,
-        'Handschuhe': handschuhe,
-        'Zusätzliche Standards': zusaetzliche_standards,
-        'COP-relevant': cop,
-        'ESD-relevant': esd,
-        'TecSa-relevant': tecsa,
-        'Prüfablauf': pruefablauf
-    }
-
-    filled_filename = f"filled_{auftrag_bmw}.pdf"
-
-    # Call your updated PDF filling function
+        # ✅ First Section (Pages 1–2)
+        "Freigabe": freigabe_bmw,
+        "Sortierstart": str(sortierstart),
+        "AuftragsID": auftrags_id,
+        "Auftrag": auftrag,
+        "BI": str(bi),
+        "VorgangsNr": vorgangs_nr,
     
-    image_fields = {
-    "Bauteilbild_box": bild1  # this assumes 'bild' is your file_uploader input earlier
+        "Tätigkeit": taetigkeit,
+        "Lieferant": lieferant,
+        "Fehlerbild A": fehlerbild_a,
+        "Fehlerbild B": fehlerbild_b,
+        "Fehlerbild C": fehlerbild_c,
+        "Fehlerbild D": fehlerbild_d,
+        "Fehlerbild E": fehlerbild_e,
+        "Fehlerbild F": fehlerbild_f,
+        "FZGMotorentyp": motorentyp,
+        "KST": kst,
+        "Tagesbedarf": tagesbedarf,
+    
+        "Abteilung": abteilung,
+        "Auftraggeber": Auftraggeber,
+        "Ansprechpartner Kunde": ansprechpartner_kunde,
+        "Prüfort Werk": Werk,
+        "Arbeitsorte": arbeitsorte,
+        "Sortierregel": sortierregel,
+        "Koordinator": Koordinator,
+        "AAW erstellt":AAW,
+    
+        "MarkierungRow1": markierung,
+        "PSARow1": ", ".join(ausgewaehlte_bilder), 
+        "Cop": cop_field_value,
+        "Zusätzliche InfosRow1": zusaetzliche_infos,
+        "Rev":rev_text,
+        "SortierPrüfort":pruefort,
+    
+        
+        "BeschreibungPrüfablaufRow1": beschreibung_pruefablauf,
+        "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
+        "Rev Freigabe": freigabe_bmw,
+        "AAW erstellt": AAW,
+
+
     }
+    
+    
+   
+    
+    # ✅ Page 8 – Materialdaten Rows 1–2
+    # ⬇️ material_data is your table (already collected from st.data_editor)
+    material_data = st.session_state.get("material_data", [])
 
-    fill_pdf_with_multiple_images("bbw_template_fillable.pdf", filled_filename, data, image_fields)
+    for i, row in enumerate(material_data[:10]):  # Only handle first 10 rows
+        row_index = i + 1  # Row1 to Row10
+        
+        data[f"MaterialnummerRow{row_index}"] = row.get("Materialnummer", "")
+        data[f"MaterialbezeichnungRow{row_index}"] = row.get("Materialbezeichnung", "")
+        data[f"LieferantRow{row_index}"] = row.get("Lieferant", "")
+        data[f"FehlerortRow{row_index}"] = row.get("Fehlerort", "")
+        data[f"FehlerartRow{row_index}"] = row.get("Fehlerart", "")
+        data[f"BIRow{row_index}"] = row.get("BI", "")
+    
+      
+    
 
+
+
+
+
+
+
+    cop_text_lines = []
+
+    if cop:
+        cop_text_lines.append(f"cop: {cop}")
+    if esd:
+        cop_text_lines.append(f"esd: {esd}")
+    if tecsa:
+        cop_text_lines.append(f"tecsa: {tecsa}")
+    
+    data["COP"] = "\n".join(cop_text_lines)
+
+
+
+    # ✅ Map image comments and names to PDF fields
+    data["Kommentar1"] = image_comment_blocks[0]["comment"] if len(image_comment_blocks) > 0 else ""
+    data["Kommentar2"] = image_comment_blocks[1]["comment"] if len(image_comment_blocks) > 1 else ""
+    data["Kommentar3"] = image_comment_blocks[2]["comment"] if len(image_comment_blocks) > 2 else ""
+    data["Kommentar4"] = image_comment_blocks[3]["comment"] if len(image_comment_blocks) > 3 else ""
+    
+    data["Name1"] = image_comment_blocks[0]["name"] if len(image_comment_blocks) > 0 else ""
+    data["Name2"] = image_comment_blocks[1]["name"] if len(image_comment_blocks) > 1 else ""
+    data["Name3"] = image_comment_blocks[2]["name"] if len(image_comment_blocks) > 2 else ""
+    data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else ""
+
+    st.write("✅ FINAL DATA PASSED TO PDF:", data)
+
+
+
+
+    cop_text_lines = []
+
+    if cop:
+        cop_text_lines.append(f"cop: {cop}")
+    if esd:
+        cop_text_lines.append(f"esd: {esd}")
+    if tecsa:
+        cop_text_lines.append(f"tecsa: {tecsa}")
+    
+    data["COP"] = "\n".join(cop_text_lines)
+
+        
 
     
-    # Create a download button for the filled PDF
-    with open(filled_filename, "rb") as file:
+# Call your new function to generate the PDF
+    output_path = fill_pdf_with_fields_and_images(
+        data,
+        image_comment_blocks,
+        template_path="template.pdf",
+        output_path="arbeitsanweisung_output.pdf"
+    )
+
+    # ✅ Show the download button
+    with open(output_path, "rb") as f:
         st.download_button(
-            label="📥 PDF herunterladen",
-            data=file,
-            file_name=filled_filename,
+            "📥 PDF herunterladen",
+            f,
+            file_name=f"Arbeitsanweisung_{auftrags_id}.pdf",  # 👈 here
             mime="application/pdf"
         )
 
-    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF gespeichert!")
+
+
+    st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF generiert!")
+
+
+
+
+
+
+
+
+
+
+
     
 
+from PyPDF2 import PdfReader
+reader = PdfReader("template.pdf")
+fields = reader.get_fields()
+for name in fields:
+    print(name)
 
-if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
-    from PyPDF2 import PdfReader
 
-    pdf_path = "bbw_template_fillable.pdf"
-    reader = PdfReader(pdf_path)
-    fields = reader.get_fields()
 
-    st.markdown("### 🧾 Gefundene Formularfelder:")
-    if fields:
-        for name in fields:
-            st.write(f"Field name: '{name}'")
-    else:
-        st.warning("⚠️ Keine Formularfelder gefunden.")
+
+
+
+
+import fitz  # PyMuPDF
+
+
+
+def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_path="template.pdf", output_path="arbeitsanweisung_output.pdf"):
+    doc = fitz.open(template_path)
+
+    # Fill all shared fields (e.g. Auftrag, BI, Rev)
+    for page in doc:
+        for widget in page.widgets():
+            field_name = widget.field_name
+            if field_name in field_data:
+                widget.field_value = str(field_data[field_name])
+                widget.update()
+
+    # Fill up to 4 image + comment + name fields
+    for i, block in enumerate(image_comment_blocks):
+        index = i + 1  # for Bild1, Kommentar1, Name/Name2...
+
+        bild_field = f"Bild{index}"
+        kommentar_field = f"Kommentar{index}"
+        name_field = "Name" if index == 1 else f"Name{index}"
+        print(f"🔍 Filling {kommentar_field} = '{block['comment']}'")
+        print(f"🔍 Filling {name_field} = '{block['name']}'")
+
+
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == bild_field:
+                    rect = widget.rect
+                    img_stream = block["image"].read()
+                    page.insert_image(rect, stream=img_stream)
+                    block["image"].seek(0)  # Reset stream in case reused
+
+                elif widget.field_name == kommentar_field:
+                    widget.field_value = block["comment"]
+                    widget.update()
+
+                elif widget.field_name == name_field:
+                    widget.field_value = block["name"]
+                    widget.update()
+
+    doc.save(output_path)
+    return output_path
+
    
