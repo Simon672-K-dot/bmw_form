@@ -366,21 +366,6 @@ if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
 
 
 
-# Build content for the "Cop" field (combined string)
-
-
-# Combine COP/ESD/TecSa selections into one string for the "Cop" PDF field
-cop_text_lines = []
-
-if cop:
-    cop_text_lines.append(f"cop: {cop}")
-if esd:
-    cop_text_lines.append(f"esd: {esd}")
-if tecsa:
-    cop_text_lines.append(f"tecsa: {tecsa}")
-
-data["COP"] = "\n".join(cop_text_lines)
-
 
 
 
@@ -448,33 +433,6 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
 
     doc.save(output_path)
     return output_path
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
