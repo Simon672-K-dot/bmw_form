@@ -527,23 +527,39 @@ if st.button("✅ Formular abgeben"):
         "AAW erstellt": AAW,
     
         # ✅ Page 8 – Materialdaten Rows 1–2
-        "Materialnummer1": cleaned_df.iloc[0]["Materialnummer"] if len(cleaned_df) > 0 else "",
-        "Materialbezeichnung1": cleaned_df.iloc[0]["Materialbezeichnung"] if len(cleaned_df) > 0 else "",
-        "Lieferant1": cleaned_df.iloc[0]["Lieferant"] if len(cleaned_df) > 0 else "",
-        "Fehlort1": cleaned_df.iloc[0]["Fehlerort"] if len(cleaned_df) > 0 else "",
-        "Fehlart1": cleaned_df.iloc[0]["Fehlerart"] if len(cleaned_df) > 0 else "",
-        "BI_1": cleaned_df.iloc[0]["BI"] if len(cleaned_df) > 0 else "",
+        # ⬇️ material_data is your table (already collected from st.data_editor)
+        for i, row in enumerate(material_data[:10]):  # Only handle first 10 rows
+        row_index = i + 1  # Row1 to Row10
     
-        "Materialnummer2": cleaned_df.iloc[1]["Materialnummer"] if len(cleaned_df) > 1 else "",
-        "Materialbezeichnung2": cleaned_df.iloc[1]["Materialbezeichnung"] if len(cleaned_df) > 1 else "",
-        "Lieferant2": cleaned_df.iloc[1]["Lieferant"] if len(cleaned_df) > 1 else "",
-        "Fehlort2": cleaned_df.iloc[1]["Fehlerort"] if len(cleaned_df) > 1 else "",
-        "Fehlart2": cleaned_df.iloc[1]["Fehlerart"] if len(cleaned_df) > 1 else "",
-        "BI_2": cleaned_df.iloc[1]["BI"] if len(cleaned_df) > 1 else "",
-    }
+        data[f"MaterialnummerRow{row_index}"] = row.get("Materialnummer", "")
+        data[f"MaterialbezeichnungRow{row_index}"] = row.get("Materialbezeichnung", "")
+        data[f"LieferantRow{row_index}"] = row.get("Lieferant", "")
+        data[f"FehlerortRow{row_index}"] = row.get("Fehlerort", "")
+        data[f"FehlerartRow{row_index}"] = row.get("Fehlerart", "")
+        data[f"BIRow{row_index}"] = row.get("BI", "")
+    
+        }
+    
 
 
-        
+
+
+
+
+
+    cop_text_lines = []
+
+    if cop:
+        cop_text_lines.append(f"cop: {cop}")
+    if esd:
+        cop_text_lines.append(f"esd: {esd}")
+    if tecsa:
+        cop_text_lines.append(f"tecsa: {tecsa}")
+    
+    data["COP"] = "\n".join(cop_text_lines)
+
+
+
     # ✅ Map image comments and names to PDF fields
     data["Kommentar1"] = image_comment_blocks[0]["comment"] if len(image_comment_blocks) > 0 else ""
     data["Kommentar2"] = image_comment_blocks[1]["comment"] if len(image_comment_blocks) > 1 else ""
@@ -556,6 +572,20 @@ if st.button("✅ Formular abgeben"):
     data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else ""
 
     st.write("✅ FINAL DATA PASSED TO PDF:", data)
+
+
+
+
+    cop_text_lines = []
+
+    if cop:
+        cop_text_lines.append(f"cop: {cop}")
+    if esd:
+        cop_text_lines.append(f"esd: {esd}")
+    if tecsa:
+        cop_text_lines.append(f"tecsa: {tecsa}")
+    
+    data["COP"] = "\n".join(cop_text_lines)
 
         
 
