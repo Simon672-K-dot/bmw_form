@@ -379,7 +379,8 @@ if esd:
 if tecsa:
     cop_text_lines.append(f"tecsa: {tecsa}")
 
-cop_field_value = "\n".join(cop_text_lines)
+data["COP"] = "\n".join(cop_text_lines)
+
 
 
 
