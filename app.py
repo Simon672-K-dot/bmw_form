@@ -526,8 +526,9 @@ if st.button("✅ Formular abgeben"):
         cop_text_lines.append(f"esd: {esd}")
     if tecsa:
         cop_text_lines.append(f"tecsa: {tecsa}")
+
     
-    data["COP"] = "\n".join(cop_text_lines)
+    data["Cop"] = "\n".join(cop_text_lines)
 
 
 
@@ -556,7 +557,7 @@ if st.button("✅ Formular abgeben"):
     if tecsa:
         cop_text_lines.append(f"tecsa: {tecsa}")
     
-    data["COP"] = "\n".join(cop_text_lines)
+    data["Cop"] = "\n".join(cop_text_lines)
 
         
 
