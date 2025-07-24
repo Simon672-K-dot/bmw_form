@@ -572,12 +572,22 @@ if st.button("✅ Formular abgeben"):
 
     # ✅ Show the download button
     with open(output_path, "rb") as f:
+        from datetime import datetime
+        
+        # 🕒 Create a readable timestamp
+        timestamp = datetime.now().strftime("%d.%m.%Y_%H-%M")
+        
+        # 🏷️ Build the file name
+        filename = f"Arbeitsanweisung_{auftrags_id}_{timestamp}.pdf"
+        
+        # 📥 Download button with better filename
         st.download_button(
             "📥 PDF herunterladen",
             f,
-            file_name=f"Arbeitsanweisung_{auftrags_id}.pdf",  # 👈 here
+            file_name=filename,
             mime="application/pdf"
-        )
+)
+
 
 
 
