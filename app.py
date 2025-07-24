@@ -395,28 +395,30 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
                 widget.update()
 
     # Fill up to 4 image + comment + name fields
-    for i, block in enumerate(image_comment_blocks):
-        index = i + 1  # for Bild1, Kommentar1, Name/Name2...
-
-        bild_field = f"Bild{index}"
-        kommentar_field = f"Kommentar{index}"
-        name_field = "Name" if index == 1 else f"Name{index}"
-
+    # ✅ Corrected: Fill up to 4 image + comment + name fields
+    for i in range(min(4, len(image_comment_blocks))):
+        block = image_comment_blocks[i]
+    
+        bild_field = f"Bild{i + 2}"            # Starts at Bild2
+        kommentar_field = f"Kommentar{i + 1}"  # Starts at Kommentar1
+        name_field = f"Name{i + 1}"            # Always Name1, Name2, ...
+    
         for page in doc:
             for widget in page.widgets():
                 if widget.field_name == bild_field:
                     rect = widget.rect
                     img_stream = block["image"].read()
                     page.insert_image(rect, stream=img_stream)
-                    block["image"].seek(0)  # Reset stream in case reused
-
+                    block["image"].seek(0)
+    
                 elif widget.field_name == kommentar_field:
                     widget.field_value = block["comment"]
                     widget.update()
-
+    
                 elif widget.field_name == name_field:
                     widget.field_value = block["name"]
                     widget.update()
+
 
     doc.save(output_path)
     return output_path
