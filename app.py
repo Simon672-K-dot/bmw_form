@@ -521,16 +521,20 @@ if st.button("✅ Formular abgeben"):
         
         "BeschreibungPrüfablaufRow1": beschreibung_pruefablauf,
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
-    
-        # ✅ Page 7 – Freigabe Section
         "Rev Freigabe": freigabe_bmw,
         "AAW erstellt": AAW,
+
+
+    }
     
-        # ✅ Page 8 – Materialdaten Rows 1–2
-        # ⬇️ material_data is your table (already collected from st.data_editor)
-        for i, row in enumerate(material_data[:10]):  # Only handle first 10 rows
+    
+   
+    
+    # ✅ Page 8 – Materialdaten Rows 1–2
+    # ⬇️ material_data is your table (already collected from st.data_editor)
+    for i, row in enumerate(material_data[:10]):  # Only handle first 10 rows
         row_index = i + 1  # Row1 to Row10
-    
+        
         data[f"MaterialnummerRow{row_index}"] = row.get("Materialnummer", "")
         data[f"MaterialbezeichnungRow{row_index}"] = row.get("Materialbezeichnung", "")
         data[f"LieferantRow{row_index}"] = row.get("Lieferant", "")
@@ -538,7 +542,7 @@ if st.button("✅ Formular abgeben"):
         data[f"FehlerartRow{row_index}"] = row.get("Fehlerart", "")
         data[f"BIRow{row_index}"] = row.get("BI", "")
     
-        }
+      
     
 
 
