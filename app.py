@@ -32,7 +32,7 @@ col_freigabe, col_ids1, col_ids2, col_ids3 = st.columns(4)
 
 with col_freigabe:
     freigabe_bmw = st.text_input("✅ Freigabe")
-    rev_text = st.text_input("🔁 REV (erscheint auf jeder Seite)")
+    rev_text = st.text_input("🔁 REV")
 
 
 with col_ids1:
@@ -273,9 +273,9 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Pr�
         
 
 
-if len(image_comment_blocks) > 4:
-    st.warning("⚠️ Maximal 4 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
-    image_comment_blocks = image_comment_blocks[:4]
+if len(image_comment_blocks) > 6:
+    st.warning("⚠️ Maximal 6 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
+    image_comment_blocks = image_comment_blocks[:6]
 
 
 
@@ -412,7 +412,7 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
                     break
 
     # ✅ Fill Bild2–Bild5, Kommentar1–4, Name1–4
-    for i in range(1, min(5, len(image_comment_blocks))):
+    for i in range(1, min(7, len(image_comment_blocks))):
         block = image_comment_blocks[i]
         bild_field = f"Bild{i + 1}"          # Starts at Bild2
         kommentar_field = f"Kommentar{i}"    # Starts at Kommentar1
@@ -526,8 +526,9 @@ if st.button("✅ Formular abgeben"):
         cop_text_lines.append(f"esd: {esd}")
     if tecsa:
         cop_text_lines.append(f"tecsa: {tecsa}")
+
     
-    data["COP"] = "\n".join(cop_text_lines)
+    data["Cop"] = "\n".join(cop_text_lines)
 
 
 
@@ -556,7 +557,7 @@ if st.button("✅ Formular abgeben"):
     if tecsa:
         cop_text_lines.append(f"tecsa: {tecsa}")
     
-    data["COP"] = "\n".join(cop_text_lines)
+    data["Cop"] = "\n".join(cop_text_lines)
 
         
 
@@ -650,5 +651,6 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
 
     doc.save(output_path)
     return output_path
+
 
    
