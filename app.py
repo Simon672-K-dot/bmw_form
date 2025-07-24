@@ -319,11 +319,16 @@ edited_df = st.data_editor(
     hide_index=True
 )
 
+
 # 🧹 Filter rows where "🗑️ Löschen?" is not checked (False or NaN)
 if not edited_df.empty:
     cleaned_df = edited_df[(edited_df["🗑️ Löschen?"] != True) | (edited_df["🗑️ Löschen?"].isna())]
 else:
     cleaned_df = pd.DataFrame(columns=columns)
+
+# ✅ Save cleaned material data to session state
+st.session_state["material_data"] = cleaned_df.to_dict(orient="records")
+
 
 
 
@@ -435,6 +440,8 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
     return output_path
 
 
+# Save the material table input
+st.session_state["material_data"] = cleaned_df.to_dict(orient="records")
 
 
 
