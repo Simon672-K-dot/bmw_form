@@ -396,12 +396,16 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
 
     # Fill up to 4 image + comment + name fields
     # ✅ Corrected: Fill up to 4 image + comment + name fields
-    for i in range(min(4, len(image_comment_blocks))):
-        block = image_comment_blocks[i]
+    # ✅ Fill image + comment + name starting from Bild2 on Page 2
+    for i, block in enumerate(image_comment_blocks):
+        # Offset by 2: Bild2–5, Kommentar1–4, Name1–4
+        bild_index = i + 2  # Page 2 → Bild2, Page 3 → Bild3...
+        comment_index = i + 1  # Kommentar1 → Kommentar4
+        name_index = i + 1     # Name1 → Name4
     
-        bild_field = f"Bild{i + 2}"            # Starts at Bild2
-        kommentar_field = f"Kommentar{i + 1}"  # Starts at Kommentar1
-        name_field = f"Name{i + 1}"            # Always Name1, Name2, ...
+        bild_field = f"Bild{bild_index}"
+        kommentar_field = f"Kommentar{comment_index}"
+        name_field = f"Name{name_index}"
     
         for page in doc:
             for widget in page.widgets():
@@ -418,6 +422,7 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
                 elif widget.field_name == name_field:
                     widget.field_value = block["name"]
                     widget.update()
+
 
 
     doc.save(output_path)
