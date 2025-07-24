@@ -412,7 +412,7 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
                     break
 
     # ✅ Fill Bild2–Bild5, Kommentar1–4, Name1–4
-    for i in range(1, min(5, len(image_comment_blocks))):
+    for i in range(1, min(6, len(image_comment_blocks))):
         block = image_comment_blocks[i]
         bild_field = f"Bild{i + 1}"          # Starts at Bild2
         kommentar_field = f"Kommentar{i}"    # Starts at Kommentar1
