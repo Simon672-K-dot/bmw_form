@@ -262,12 +262,13 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Pr�
     comment = st.session_state.get(comment_key)
     name = st.session_state.get(name_key)
 
-    if image and comment and name:
+    if image:
         image_comment_blocks.append({
             "image": image,
-            "comment": comment,
-            "name": name
+            "comment": comment or "",
+            "name": name or ""
         })
+
         image_number = len(image_comment_blocks)  # e.g., 1, 2, 3, ...
         
 
@@ -523,7 +524,10 @@ if st.button("✅ Formular abgeben"):
     data["Name1"] = image_comment_blocks[0]["name"] if len(image_comment_blocks) > 0 else ""
     data["Name2"] = image_comment_blocks[1]["name"] if len(image_comment_blocks) > 1 else ""
     data["Name3"] = image_comment_blocks[2]["name"] if len(image_comment_blocks) > 2 else ""
-    data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else ""
+    data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else 
+
+    st.write("✅ FINAL DATA PASSED TO PDF:", data)
+
         
 
     
@@ -594,6 +598,9 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
         bild_field = f"Bild{index}"
         kommentar_field = f"Kommentar{index}"
         name_field = "Name" if index == 1 else f"Name{index}"
+        print(f"🔍 Filling {kommentar_field} = '{block['comment']}'")
+        print(f"🔍 Filling {name_field} = '{block['name']}'")
+
 
         for page in doc:
             for widget in page.widgets():
