@@ -497,31 +497,32 @@ if st.button("✅ Formular abgeben"):
         "Fehlerbild D": fehlerbild_d,
         "Fehlerbild E": fehlerbild_e,
         "Fehlerbild F": fehlerbild_f,
-        "FZG / Motorentyp": motorentyp,
+        "FZGMotorentyp": motorentyp,
         "KST": kst,
         "Tagesbedarf": tagesbedarf,
     
         "Abteilung": abteilung,
         "Auftraggeber": Auftraggeber,
         "Ansprechpartner Kunde": ansprechpartner_kunde,
-        "Prüfort Werk": pruefort,
-        "Arbeitsort(e)": arbeitsorte,
+        "Prüfort Werk": Werk,
+        "Arbeitsorte": arbeitsorte,
         "Sortierregel": sortierregel,
         "Koordinator": Koordinator,
         "AAW erstellt":AAW,
     
-        "Markierung": markierung,
-        "PSA": ", ".join(ausgewaehlte_bilder), 
+        "MarkierungRow1": markierung,
+        "PSARow1": ", ".join(ausgewaehlte_bilder), 
         "Cop": cop_field_value,
-        "Zusätzliche Infos": zusaetzliche_infos,
+        "Zusätzliche InfosRow1": zusaetzliche_infos,
         "Rev":rev_text,
-        
+        "SortierPrüfort":pruefort,
     
-        "Prüfablauf": beschreibung_pruefablauf,
+        
+        "BeschreibungPrüfablaufRow1": beschreibung_pruefablauf,
         "Gebots und Warnschilder": ", ".join(ausgewaehlte_bilder),
     
         # ✅ Page 7 – Freigabe Section
-        "Freigabe Formel I": freigabe_bmw,
+        "Rev Freigabe": freigabe_bmw,
         "AAW erstellt": AAW,
     
         # ✅ Page 8 – Materialdaten Rows 1–2
