@@ -273,9 +273,9 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Pr�
         
 
 
-if len(image_comment_blocks) > 4:
-    st.warning("⚠️ Maximal 4 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
-    image_comment_blocks = image_comment_blocks[:4]
+if len(image_comment_blocks) > 6:
+    st.warning("⚠️ Maximal 6 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
+    image_comment_blocks = image_comment_blocks[:6]
 
 
 
@@ -412,7 +412,7 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
                     break
 
     # ✅ Fill Bild2–Bild5, Kommentar1–4, Name1–4
-    for i in range(1, min(6, len(image_comment_blocks))):
+    for i in range(1, min(7, len(image_comment_blocks))):
         block = image_comment_blocks[i]
         bild_field = f"Bild{i + 1}"          # Starts at Bild2
         kommentar_field = f"Kommentar{i}"    # Starts at Kommentar1
