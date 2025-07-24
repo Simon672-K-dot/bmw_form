@@ -32,7 +32,7 @@ col_freigabe, col_ids1, col_ids2, col_ids3 = st.columns(4)
 
 with col_freigabe:
     freigabe_bmw = st.text_input("✅ Freigabe")
-    rev_text = st.text_input("🔁 REV (erscheint auf jeder Seite)")
+    rev_text = st.text_input("🔁 REV")
 
 
 with col_ids1:
