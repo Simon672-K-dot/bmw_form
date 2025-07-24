@@ -490,6 +490,8 @@ if st.button("✅ Formular abgeben"):
     
     # ✅ Page 8 – Materialdaten Rows 1–2
     # ⬇️ material_data is your table (already collected from st.data_editor)
+    material_data = st.session_state.get("material_data", [])
+
     for i, row in enumerate(material_data[:10]):  # Only handle first 10 rows
         row_index = i + 1  # Row1 to Row10
         
