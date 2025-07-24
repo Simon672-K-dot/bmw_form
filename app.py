@@ -385,6 +385,17 @@ cop_field_value = "\n".join(cop_text_lines)
 
 def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_path="template.pdf", output_path="arbeitsanweisung_output.pdf"):
     doc = fitz.open(template_path)
+    # ✅ Manually fill Bild1 on the first page (from image_comment_blocks[0])
+    if len(image_comment_blocks) > 0:
+        bild1_stream = image_comment_blocks[0]["image"]
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == "Bild1":
+                    rect = widget.rect
+                    img_stream = bild1_stream.read()
+                    page.insert_image(rect, stream=img_stream)
+                    bild1_stream.seek(0)
+
 
     # Fill all shared fields (e.g. Auftrag, BI, Rev)
     for page in doc:
@@ -397,15 +408,24 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
     # Fill up to 4 image + comment + name fields
     # ✅ Corrected: Fill up to 4 image + comment + name fields
     # ✅ Fill image + comment + name starting from Bild2 on Page 2
-    for i, block in enumerate(image_comment_blocks):
-        # Offset by 2: Bild2–5, Kommentar1–4, Name1–4
-        bild_index = i + 2  # Page 2 → Bild2, Page 3 → Bild3...
-        comment_index = i + 1  # Kommentar1 → Kommentar4
-        name_index = i + 1     # Name1 → Name4
-    
-        bild_field = f"Bild{bild_index}"
-        kommentar_field = f"Kommentar{comment_index}"
-        name_field = f"Name{name_index}"
+    # ✅ Fill Bild1 from the first image only (no comment/name)
+    if len(image_comment_blocks) > 0:
+        block = image_comment_blocks[0]
+        for page in doc:
+            for widget in page.widgets():
+                if widget.field_name == "Bild1":
+                    rect = widget.rect
+                    img_stream = block["image"].read()
+                    page.insert_image(rect, stream=img_stream)
+                    block["image"].seek(0)
+                    break
+
+    # ✅ Fill Bild2–Bild5, Kommentar1–4, Name1–4
+    for i in range(1, min(5, len(image_comment_blocks))):
+        block = image_comment_blocks[i]
+        bild_field = f"Bild{i + 1}"          # Starts at Bild2
+        kommentar_field = f"Kommentar{i}"    # Starts at Kommentar1
+        name_field = f"Name{i}"              # Starts at Name1
     
         for page in doc:
             for widget in page.widgets():
