@@ -184,11 +184,13 @@ st.markdown("## 📋 Auswahl der Bauteile zur Dokumentation")
 
 # --- Anzahl je Bauteiltyp ---
 
-num_bauteilbild = st.number_input("📸 Bauteilbild", min_value=0, max_value=10, value=0)
-num_nio = st.number_input("❌ NIO-Bauteil", min_value=0, max_value=10, value=0)
-num_hilfsmittel = st.number_input("🔧 Prüf-/Hilfsmittel", min_value=0, max_value=10, value=0)
-num_pruefablauf = st.number_input("📋 Allgemeiner Prüfablauf", min_value=0, max_value=10, value=0)
-num_io_markierung = st.number_input("🖊️ IO-Markierung", min_value=0, max_value=10, value=0)
+num_vorlage_1 = st.number_input("🧾 Vorlage 1", min_value=0, max_value=10, value=0)
+num_vorlage_2 = st.number_input("🧾 Vorlage 2", min_value=0, max_value=10, value=0)
+num_vorlage_3 = st.number_input("🧾 Vorlage 3", min_value=0, max_value=10, value=0)
+num_vorlage_4 = st.number_input("🧾 Vorlage 4", min_value=0, max_value=10, value=0)
+num_vorlage_5 = st.number_input("🧾 Vorlage 5", min_value=0, max_value=10, value=0)
+num_vorlage_6 = st.number_input("🧾 Vorlage 6", min_value=0, max_value=10, value=0)
+
 
 
 st.markdown("---")
@@ -220,20 +222,28 @@ def render_block(typ, index):
 
 
 # --- Serienbehälter Blöcke ---
-for i in range(num_bauteilbild):
-    render_block("Bauteilbild", i)
 
-for i in range(num_nio):
-    render_block("NIO-Bauteil", i)
 
-for i in range(num_hilfsmittel):
-    render_block("Prüf-/Hilfsmittel", i)
+for i in range(num_vorlage_1):
+    render_block("Vorlage 1", i)
 
-for i in range(num_pruefablauf):
-    render_block("Allgemeiner Prüfablauf", i)
+for i in range(num_vorlage_2):
+    render_block("Vorlage 2", i)
 
-for i in range(num_io_markierung):
-    render_block("IO-Markierung", i)
+for i in range(num_vorlage_3):
+    render_block("Vorlage 3", i)
+
+for i in range(num_vorlage_4):
+    render_block("Vorlage 4", i)
+
+for i in range(num_vorlage_5):
+    render_block("Vorlage 5", i)
+
+for i in range(num_vorlage_6):
+    render_block("Vorlage 6", i)
+
+
+    
 
 
 
@@ -252,7 +262,7 @@ if "bauteilbild1" in st.session_state and st.session_state["bauteilbild1"]:
     })
 
 # ✅ Add image blocks from the expandable sections
-for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+for typ in ["Vorlage 1", "Vorlage 2", "Vorlage 3", "Vorlage 4", "Vorlage 5", "Vorlage 6"]:
     i = 0
     image_key = f"img_{typ}_{i}"
     comment_key = f"kommentar_{typ}_{i}"
