@@ -589,11 +589,15 @@ if st.button("✅ Formular abgeben"):
     with open(output_path, "rb") as f:
         from datetime import datetime
         
-        # 🕒 Create a readable timestamp
-        timestamp = datetime.now().strftime("%d.%m.%Y_%H-%M")
+        
+       
         
         # 🏷️ Build the file name
-        filename = f"Arbeitsanweisung_{auftrags_id}_{timestamp}.pdf"
+        # Build the file , using Auftrags-ID and Rev only
+        filename = f"Arbeitsanweisung_{auftrags_id}_{rev_text}.pdf"
+
+
+
         
         # 📥 Download button with better filename
         st.download_button(
