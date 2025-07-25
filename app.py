@@ -594,7 +594,8 @@ if st.button("✅ Formular abgeben"):
         
         # 🏷️ Build the file name
         # Build the file , using Auftrags-ID and Rev only
-        filename = f"Arbeitsanweisung_{auftrags_id}_{rev_text}.pdf"
+        filename = f"Arbeitsanweisung_{auftrags_id}_rev{rev_text}.pdf"
+
 
 
 
