@@ -283,8 +283,8 @@ for typ in ["Vorlage 1", "Vorlage 2", "Vorlage 3", "Vorlage 4", "Vorlage 5", "Vo
         
 
 
-if len(image_comment_blocks) > 6:
-    st.warning("⚠️ Maximal 7 Bilder mit Kommentaren erlaubt – nur die ersten 6 werden übernommen.")
+if len(image_comment_blocks) > 7:
+    st.warning("⚠️ Maximal 7 Bilder erlaubt")
     image_comment_blocks = image_comment_blocks[:7]
 
 
