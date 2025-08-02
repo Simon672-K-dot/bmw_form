@@ -519,6 +519,19 @@ if st.button("✅ Formular abgeben"):
         data[f"FehlerortRow{row_index}"] = row.get("Fehlerort", "")
         data[f"FehlerartRow{row_index}"] = row.get("Fehlerart", "")
         data[f"BIRow{row_index}"] = row.get("BI", "")
+
+
+
+        # ✅ Page 9 – Materialdaten Rows 11–20
+    for i, row in enumerate(material_data[10:20]):  # Rows 11 to 20
+        row_index = i + 11  # Row11 to Row20
+        data[f"MaterialnummerRow{row_index}"] = row.get("Materialnummer", "")
+        data[f"MaterialbezeichnungRow{row_index}"] = row.get("Materialbezeichnung", "")
+        data[f"LieferantRow{row_index}"] = row.get("Lieferant", "")
+        data[f"FehlerortRow{row_index}"] = row.get("Fehlerort", "")
+        data[f"FehlerartRow{row_index}"] = row.get("Fehlerart", "")
+        data[f"TagesbedarfRow{row_index}"] = row.get("Tagesbedarf", "")
+
     
       
     
