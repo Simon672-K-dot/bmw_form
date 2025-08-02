@@ -314,7 +314,9 @@ columns = [
     "Lieferant",
     "Fehlerort",
     "Fehlerart",
-    "Tagesbedarf"
+    "Tagesbedarf",
+    "🗑️ Löschen?"
+    
 ]
 
 # Leeres DataFrame (dynamisch erweiterbar)
