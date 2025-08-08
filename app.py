@@ -632,25 +632,6 @@ if st.button("✅ Formular abgeben"):
 
 
 
-
-
-
-
-
-    
-
-from PyPDF2 import PdfReader
-reader = PdfReader("template.pdf")
-fields = reader.get_fields()
-for name in fields:
-    print(name)
-
-
-
-
-
-
-
 import fitz  # PyMuPDF
 
 
