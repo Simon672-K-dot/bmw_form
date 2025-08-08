@@ -348,33 +348,6 @@ st.session_state["material_data"] = cleaned_df.to_dict(orient="records")
 
 # --- FINAL SUBMIT BUTTON ---
 
-#d bug 
-from io import BytesIO
-
-st.markdown("---")
-st.markdown("### 🔍 PDF-Felder anzeigen (Debug Tool)")
-
-if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
-    from PyPDF2 import PdfReader
-    import os
-
-    pdf_path = "template.pdf"
-    st.write("📁 Dateipfad:", pdf_path)
-    st.write("🧪 Datei existiert:", os.path.exists(pdf_path))
-
-    try:
-        reader = PdfReader(pdf_path)
-        fields = reader.get_fields()
-
-        st.markdown("### 🧾 Gefundene Formularfelder:")
-        if fields:
-            for name in fields:
-                st.write(f"Field name: '{name}'")
-        else:
-            st.warning("⚠️ Keine Formularfelder gefunden.")
-    except Exception as e:
-         st.warning(f"⚠️ Fehler beim Auslesen der Felder: {e}")
-
 
 
 
