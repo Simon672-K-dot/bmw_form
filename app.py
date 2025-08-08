@@ -542,8 +542,6 @@ if st.button("✅ Formular abgeben"):
     data["Name5"] = image_comment_blocks[4]["name"] if len(image_comment_blocks) > 4 else ""
     data["Name6"] = image_comment_blocks[5]["name"] if len(image_comment_blocks) > 5 else ""
 
-    st.write("✅ FINAL DATA PASSED TO PDF:", data)
-
 
 
 
