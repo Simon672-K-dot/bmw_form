@@ -1,4 +1,7 @@
 
+
+
+
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -63,8 +66,6 @@ with col2:
     auftrag = st.text_input("📄 Auftrag")
     lieferant = st.text_input("🚚 Lieferant")
     kst = st.text_input("⚙️ KST")
-    tagesbedarf = st.text_input("📦 Tagesbedarf")
-    ansprechpartner_kunde = st.text_input("👤 Ansprechpartner Kunde")
     arbeitsorte = st.text_input("📍 Arbeitsort(e)")
     Werk = st.text_input("Prüfort Werk")
     
@@ -184,11 +185,13 @@ st.markdown("## 📋 Auswahl der Bauteile zur Dokumentation")
 
 # --- Anzahl je Bauteiltyp ---
 
-num_bauteilbild = st.number_input("📸 Bauteilbild", min_value=0, max_value=10, value=0)
-num_nio = st.number_input("❌ NIO-Bauteil", min_value=0, max_value=10, value=0)
-num_hilfsmittel = st.number_input("🔧 Prüf-/Hilfsmittel", min_value=0, max_value=10, value=0)
-num_pruefablauf = st.number_input("📋 Allgemeiner Prüfablauf", min_value=0, max_value=10, value=0)
-num_io_markierung = st.number_input("🖊️ IO-Markierung", min_value=0, max_value=10, value=0)
+num_vorlage_1 = st.number_input("🧾 Vorlage 1", min_value=0, max_value=10, value=0)
+num_vorlage_2 = st.number_input("🧾 Vorlage 2", min_value=0, max_value=10, value=0)
+num_vorlage_3 = st.number_input("🧾 Vorlage 3", min_value=0, max_value=10, value=0)
+num_vorlage_4 = st.number_input("🧾 Vorlage 4", min_value=0, max_value=10, value=0)
+num_vorlage_5 = st.number_input("🧾 Vorlage 5", min_value=0, max_value=10, value=0)
+num_vorlage_6 = st.number_input("🧾 Vorlage 6", min_value=0, max_value=10, value=0)
+
 
 
 st.markdown("---")
@@ -220,20 +223,28 @@ def render_block(typ, index):
 
 
 # --- Serienbehälter Blöcke ---
-for i in range(num_bauteilbild):
-    render_block("Bauteilbild", i)
 
-for i in range(num_nio):
-    render_block("NIO-Bauteil", i)
 
-for i in range(num_hilfsmittel):
-    render_block("Prüf-/Hilfsmittel", i)
+for i in range(num_vorlage_1):
+    render_block("Vorlage 1", i)
 
-for i in range(num_pruefablauf):
-    render_block("Allgemeiner Prüfablauf", i)
+for i in range(num_vorlage_2):
+    render_block("Vorlage 2", i)
 
-for i in range(num_io_markierung):
-    render_block("IO-Markierung", i)
+for i in range(num_vorlage_3):
+    render_block("Vorlage 3", i)
+
+for i in range(num_vorlage_4):
+    render_block("Vorlage 4", i)
+
+for i in range(num_vorlage_5):
+    render_block("Vorlage 5", i)
+
+for i in range(num_vorlage_6):
+    render_block("Vorlage 6", i)
+
+
+    
 
 
 
@@ -252,7 +263,7 @@ if "bauteilbild1" in st.session_state and st.session_state["bauteilbild1"]:
     })
 
 # ✅ Add image blocks from the expandable sections
-for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Prüfablauf", "IO-Markierung"]:
+for typ in ["Vorlage 1", "Vorlage 2", "Vorlage 3", "Vorlage 4", "Vorlage 5", "Vorlage 6"]:
     i = 0
     image_key = f"img_{typ}_{i}"
     comment_key = f"kommentar_{typ}_{i}"
@@ -273,9 +284,9 @@ for typ in ["Bauteilbild", "NIO-Bauteil", "Prüf-/Hilfsmittel", "Allgemeiner Pr�
         
 
 
-if len(image_comment_blocks) > 6:
-    st.warning("⚠️ Maximal 6 Bilder mit Kommentaren erlaubt – nur die ersten 4 werden übernommen.")
-    image_comment_blocks = image_comment_blocks[:6]
+if len(image_comment_blocks) > 7:
+    st.warning("⚠️ Maximal 7 Bilder erlaubt")
+    image_comment_blocks = image_comment_blocks[:7]
 
 
 
@@ -304,8 +315,9 @@ columns = [
     "Lieferant",
     "Fehlerort",
     "Fehlerart",
-    "BI",
+    "Tagesbedarf",
     "🗑️ Löschen?"
+    
 ]
 
 # Leeres DataFrame (dynamisch erweiterbar)
@@ -338,33 +350,6 @@ st.session_state["material_data"] = cleaned_df.to_dict(orient="records")
 
 
 # --- FINAL SUBMIT BUTTON ---
-
-#d bug 
-from io import BytesIO
-
-st.markdown("---")
-st.markdown("### 🔍 PDF-Felder anzeigen (Debug Tool)")
-
-if st.button("📋 Zeige PDF-Feldnamen (PyPDF2)"):
-    from PyPDF2 import PdfReader
-    import os
-
-    pdf_path = "template.pdf"
-    st.write("📁 Dateipfad:", pdf_path)
-    st.write("🧪 Datei existiert:", os.path.exists(pdf_path))
-
-    try:
-        reader = PdfReader(pdf_path)
-        fields = reader.get_fields()
-
-        st.markdown("### 🧾 Gefundene Formularfelder:")
-        if fields:
-            for name in fields:
-                st.write(f"Field name: '{name}'")
-        else:
-            st.warning("⚠️ Keine Formularfelder gefunden.")
-    except Exception as e:
-         st.warning(f"⚠️ Fehler beim Auslesen der Felder: {e}")
 
 
 
@@ -412,7 +397,7 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
                     break
 
     # ✅ Fill Bild2–Bild5, Kommentar1–4, Name1–4
-    for i in range(1, min(7, len(image_comment_blocks))):
+    for i in range(1, min(8, len(image_comment_blocks))):
         block = image_comment_blocks[i]
         bild_field = f"Bild{i + 1}"          # Starts at Bild2
         kommentar_field = f"Kommentar{i}"    # Starts at Kommentar1
@@ -465,11 +450,8 @@ if st.button("✅ Formular abgeben"):
         "Fehlerbild F": fehlerbild_f,
         "FZGMotorentyp": motorentyp,
         "KST": kst,
-        "Tagesbedarf": tagesbedarf,
-    
         "Abteilung": abteilung,
         "Auftraggeber": Auftraggeber,
-        "Ansprechpartner Kunde": ansprechpartner_kunde,
         "Prüfort Werk": Werk,
         "Arbeitsorte": arbeitsorte,
         "Sortierregel": sortierregel,
@@ -508,6 +490,21 @@ if st.button("✅ Formular abgeben"):
         data[f"FehlerortRow{row_index}"] = row.get("Fehlerort", "")
         data[f"FehlerartRow{row_index}"] = row.get("Fehlerart", "")
         data[f"BIRow{row_index}"] = row.get("BI", "")
+
+
+
+          
+        # ✅ Page 9 – Materialdaten Rows 11–20 (field names reused but without "Row")
+    for i, row in enumerate(material_data[10:20]):  # Second table
+        index = i + 1  # Field names are still 1–10
+        data[f"Materialnummer{index}"] = row.get("Materialnummer", "")
+        data[f"Materialbezeichnung{index}"] = row.get("Materialbezeichnung", "")
+        data[f"Lieferant{index}"] = row.get("Lieferant", "")
+        data[f"Fehlerort{index}"] = row.get("Fehlerort", "")
+        data[f"Fehlerart{index}"] = row.get("Fehlerart", "")
+        data[f"BI{index}"] = row.get("Tagesbedarf", "")
+
+
     
       
     
@@ -532,18 +529,21 @@ if st.button("✅ Formular abgeben"):
 
 
 
-    # ✅ Map image comments and names to PDF fields
+    
+    # ✅ Map image comments and names to PDF fields (7 pictures)
     data["Kommentar1"] = image_comment_blocks[0]["comment"] if len(image_comment_blocks) > 0 else ""
     data["Kommentar2"] = image_comment_blocks[1]["comment"] if len(image_comment_blocks) > 1 else ""
     data["Kommentar3"] = image_comment_blocks[2]["comment"] if len(image_comment_blocks) > 2 else ""
     data["Kommentar4"] = image_comment_blocks[3]["comment"] if len(image_comment_blocks) > 3 else ""
+    data["Kommentar5"] = image_comment_blocks[4]["comment"] if len(image_comment_blocks) > 4 else ""
+    data["Kommentar6"] = image_comment_blocks[5]["comment"] if len(image_comment_blocks) > 5 else ""
     
     data["Name1"] = image_comment_blocks[0]["name"] if len(image_comment_blocks) > 0 else ""
     data["Name2"] = image_comment_blocks[1]["name"] if len(image_comment_blocks) > 1 else ""
     data["Name3"] = image_comment_blocks[2]["name"] if len(image_comment_blocks) > 2 else ""
     data["Name4"] = image_comment_blocks[3]["name"] if len(image_comment_blocks) > 3 else ""
-
-    st.write("✅ FINAL DATA PASSED TO PDF:", data)
+    data["Name5"] = image_comment_blocks[4]["name"] if len(image_comment_blocks) > 4 else ""
+    data["Name6"] = image_comment_blocks[5]["name"] if len(image_comment_blocks) > 5 else ""
 
 
 
@@ -572,35 +572,32 @@ if st.button("✅ Formular abgeben"):
 
     # ✅ Show the download button
     with open(output_path, "rb") as f:
+        from datetime import datetime
+        
+        
+       
+        
+        # 🏷️ Build the file name
+        # Build the file , using Auftrags-ID and Rev only
+        filename = f"{auftrags_id}_Arbeitsanweisung_rev{rev_text}.pdf"
+
+
+
+
+
+        
+        # 📥 Download button with better filename
         st.download_button(
             "📥 PDF herunterladen",
             f,
-            file_name=f"Arbeitsanweisung_{auftrags_id}.pdf",  # 👈 here
+            file_name=filename,
             mime="application/pdf"
-        )
+)
+
 
 
 
     st.success("✅ Das Formular wurde erfolgreich abgegeben und als PDF generiert!")
-
-
-
-
-
-
-
-
-
-
-
-    
-
-from PyPDF2 import PdfReader
-reader = PdfReader("template.pdf")
-fields = reader.get_fields()
-for name in fields:
-    print(name)
-
 
 
 
@@ -653,4 +650,5 @@ def fill_pdf_with_fields_and_images(field_data, image_comment_blocks, template_p
     return output_path
 
 
-   
+    
+
