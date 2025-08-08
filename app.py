@@ -474,11 +474,8 @@ if st.button("✅ Formular abgeben"):
         "Fehlerbild F": fehlerbild_f,
         "FZGMotorentyp": motorentyp,
         "KST": kst,
-        "Tagesbedarf": tagesbedarf,
-    
         "Abteilung": abteilung,
         "Auftraggeber": Auftraggeber,
-        "Ansprechpartner Kunde": ansprechpartner_kunde,
         "Prüfort Werk": Werk,
         "Arbeitsorte": arbeitsorte,
         "Sortierregel": sortierregel,
