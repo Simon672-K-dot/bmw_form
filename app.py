@@ -63,8 +63,6 @@ with col2:
     auftrag = st.text_input("📄 Auftrag")
     lieferant = st.text_input("🚚 Lieferant")
     kst = st.text_input("⚙️ KST")
-    tagesbedarf = st.text_input("📦 Tagesbedarf")
-    ansprechpartner_kunde = st.text_input("👤 Ansprechpartner Kunde")
     arbeitsorte = st.text_input("📍 Arbeitsort(e)")
     Werk = st.text_input("Prüfort Werk")
     
